@@ -3,21 +3,8 @@
 #include "detectUSSensorObject.h"
 #include "pid.h"
 #include "variables.h"
+#include "encoderInterrupt.h"
 
-// Encoder interrupt functions
-void left_encoder_interrupt(){
-  // if (interupt){
-    leftEncoderCount = leftEncoderCount + 1;
-    //Serial.println("--------");
-  //}
-}
-
-void right_encoder_interrupt(){
-  if (interupt){
-    rightEncoderCount ++;
-    //Serial.println("+++++++++");
-  }
-}
 void setup() {
   delay(1000);
   Serial.begin(9600);
