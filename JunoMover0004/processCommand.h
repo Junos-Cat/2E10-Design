@@ -8,13 +8,9 @@ void processCommand(WiFiClient &client) {
     char c = client.read();
     if (c=='G'){
       runBuggy=true;
-      // Serial.print("command: ");
-      // Serial.println(c);
     }
     else{
       runBuggy=false;
-      // Serial.print("command: ");
-      // Serial.println(c);
     }
   }
 }
