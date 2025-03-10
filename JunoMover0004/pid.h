@@ -9,6 +9,7 @@ void pid(int sideMotor, int speed){
   leftTheta = leftEncoderCount * 45;
   rightTheta = rightEncoderCount * 45;
 
+  // Step function that changes the desired RPM of the left motor
   if (pidDesiredTCounter>10000){
     pidDesiredTCounter-=10000;
     if (change){
@@ -20,50 +21,25 @@ void pid(int sideMotor, int speed){
       leftRPMDesired = 0;
     }
   }
-  
+  // We're currently tuning the left wheel so we don't need this
   rightVDesired = 0;
 
   leftDeltaTheta = leftTheta - leftThetaPrevious;
   rightDeltaTheta = rightTheta - rightThetaPrevious;
 
   leftRPM = leftDeltaTheta/(dt)*dpr;
-  if ((-5 < leftRPM || leftRPM < 5) && not(-0.25 < leftV || leftV < 0.25)){
-    leftRPM = leftRPMPrevious;
-  }
+
   rightRPM = rightDeltaTheta/(dt)*dpr;
-  if ((-5 < rightRPM || rightRPM < 5) && not(-0.25 < rightV || rightV < 0.25)){
-    rightRPM = rightRPMPrevious;
-  }//dont need anymore
-  
-  // leftRPM = 60;
-  // rightRPM = 80;
+
   // Calculation of error, integration value, 
   // and voltage to be supplied to a motor
   leftE = leftRPMDesired - leftRPM;
   leftInte = leftIntePrevious + (dt * (leftE + leftEPrevious) * half);
-  // if (leftInte > 10){
-  //   leftInte -= damper;
-  // }
-  // else if (leftInte < -10){
-  //   leftInte += damper;
-  // }
-  // else {
-  //   leftInte = 0;
-  // }
+
   leftV = (kp * leftE + ki * leftInte + (kd * (leftE - leftEPrevious))*1000 / dt);
 
   rightE = rightRPMDesired - rightRPM;
   rightInte = rightIntePrevious + (dt * (rightE + rightEPrevious) * half);
-
-  // if (rightInte > 10){
-  //   rightInte -= damper;
-  // }
-  // else if (rightInte < -10){
-  //   rightInte += damper;
-  // }
-  // else {
-  //   rightInte = 0;
-  // }
 
   rightV = (kp * rightE + ki * rightInte + (kd * (rightE - rightEPrevious))*1000 / dt);
 

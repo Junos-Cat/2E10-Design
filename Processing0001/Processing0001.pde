@@ -3,7 +3,7 @@ import processing.net.*;
 Client myClient;
 String data, travMessage;
 float objectDistPrev, objectDistPrevPrev, objectDist, travelDist;
-String buggyIP = "192.168.0.193";
+String buggyIP = "192.168.4.1";
 String command = "STOP";
 String message = "na", messagePrev = "NA";
 
