@@ -1,6 +1,7 @@
 #pragma once
 #include <Arduino.h>
 #include "variables.h"
+#include "motorControl.h"
 
 void pid(int sideMotor, int speed){
   pidDesiredTCounter += dt;
@@ -40,28 +41,30 @@ void pid(int sideMotor, int speed){
   // and voltage to be supplied to a motor
   leftE = leftRPMDesired - leftRPM;
   leftInte = leftIntePrevious + (dt * (leftE + leftEPrevious) * half);
-  if (leftInte > 10){
-    leftInte -= damper;
-  }
-  else if (leftInte < -10){
-    leftInte += damper;
-  }
-  else {
-    leftInte = 0;
-  }
-  leftV = (leftVPrevious + kp * leftE + ki * leftInte + (kd * (leftE - leftEPrevious))*1000 / dt);
+  // if (leftInte > 10){
+  //   leftInte -= damper;
+  // }
+  // else if (leftInte < -10){
+  //   leftInte += damper;
+  // }
+  // else {
+  //   leftInte = 0;
+  // }
+  leftV = (kp * leftE + ki * leftInte + (kd * (leftE - leftEPrevious))*1000 / dt);
 
   rightE = rightRPMDesired - rightRPM;
   rightInte = rightIntePrevious + (dt * (rightE + rightEPrevious) * half);
-  if (rightInte > 10){
-    rightInte -= damper;
-  }
-  else if (rightInte < -10){
-    rightInte += damper;
-  }
-  else {
-    rightInte = 0;
-  }
+
+  // if (rightInte > 10){
+  //   rightInte -= damper;
+  // }
+  // else if (rightInte < -10){
+  //   rightInte += damper;
+  // }
+  // else {
+  //   rightInte = 0;
+  // }
+
   rightV = (kp * rightE + ki * rightInte + (kd * (rightE - rightEPrevious))*1000 / dt);
 
   // Prevention of antiwinder
