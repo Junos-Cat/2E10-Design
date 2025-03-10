@@ -1,5 +1,7 @@
 #include <WiFiS3.h>
 #include "processCommand.h"
+#include "detectUSSensorObject.h"
+#include "pid.h"
 
 // --- WiFi Settings ---
 const char* ssid = "Cheeky";             // Your WiFi network name
@@ -46,7 +48,7 @@ float t, tPrevious=0, dt;
 float duration, distance, distancePrevious = 0;     // Duration of ultrasonic pulse and calculated distance
 String message;
 
-// Encoder/PID variables
+// Encoder/pid variables
 volatile int leftEncoderCount = 0;
 volatile int rightEncoderCount = 0;
 bool interupt = false;
@@ -160,30 +162,29 @@ void loop() {
   // --- Motor Control ---
   // Stop the motors if the robot is not running or if an obstacle is detected
   if (!runBuggy || USStop) {
-    analogWrite(LEFT_MOTOR_EN, speed3);
-    analogWrite(RIGHT_MOTOR_EN, speed3);
-    DELAY = 0;
+    pid(LEFT_MOTOR_EN, speed3);
+    pid(RIGHT_MOTOR_EN, speed3);
     x = 0;
     y = 0;
   } else {
     // Decide movement based on sensor input
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
-      analogWrite(LEFT_MOTOR_EN, speed1 * leftF);
-      analogWrite(RIGHT_MOTOR_EN, speed1 * rightF);
+      pid(LEFT_MOTOR_EN, speed1 * leftF);
+      pid(RIGHT_MOTOR_EN, speed1 * rightF);
       x = 0;
       y = 0;
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
       x += 0.1;
-      analogWrite(LEFT_MOTOR_EN, speed3 * leftF);
-      analogWrite(RIGHT_MOTOR_EN, (speed2 + x) * rightF);
+      pid(LEFT_MOTOR_EN, speed3 * leftF);
+      pid(RIGHT_MOTOR_EN, (speed2 + x) * rightF);
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
       y += 0.1;
-      analogWrite(LEFT_MOTOR_EN, (speed2 + y) * leftF);
-      analogWrite(RIGHT_MOTOR_EN, speed3 * rightF);
+      pid(LEFT_MOTOR_EN, (speed2 + y) * leftF);
+      pid(RIGHT_MOTOR_EN, speed3 * rightF);
     } else {
       // If no sensor condition is met, stop the motors
-      analogWrite(LEFT_MOTOR_EN, 0);
-      analogWrite(RIGHT_MOTOR_EN, 0);
+      pid(LEFT_MOTOR_EN, 0);
+      pid(RIGHT_MOTOR_EN, 0);
     }
   }
   
