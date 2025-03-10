@@ -7,6 +7,7 @@ WiFiServer server(5204);                    // Create an HTTP server on port 80
 
 // --- Global State Variables ---
 bool runBuggy = false;                    // Flag to determine if the robot should run
+//hello github
 
 // --- Sensor and Motor Pin Definitions ---
 const int LEFT_IR = A2;          // Left IR sensor pin
