@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
 
-
+string hello;
 // --- WiFi Settings ---
 const char* ssid = "Cheeky";             // Your WiFi network name
 const char* password = "CheekyBoy";        // Your WiFi password
