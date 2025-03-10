@@ -1,9 +1,14 @@
+#pragma once
 #include <WiFiS3.h>
+#include <PID_v1.h>
+
 #include "processCommand.h"
 #include "detectUSSensorObject.h"
 #include "pid.h"
 #include "variables.h"
 #include "encoderInterrupt.h"
+
+void pid();
 
 void setup() {
   delay(1000);
@@ -54,6 +59,9 @@ void setup() {
   attachInterrupt( digitalPinToInterrupt(LEFT_ENCODER), left_encoder_interrupt, CHANGE);
   attachInterrupt( digitalPinToInterrupt(RIGHT_ENCODER), right_encoder_interrupt, CHANGE);
 
+  // PID set up
+  pidSetup();
+
   delay(3000);  // Delay to allow the system to stabilize
   Serial.println("Starting loop");
 }
@@ -100,22 +108,18 @@ void loop() {
   } else {
     // Decide movement based on sensor input
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
-      pid(LEFT_MOTOR_EN, speed1 * leftF);
-      pid(RIGHT_MOTOR_EN, speed1 * rightF);
+      pid(speed1 * leftF, speed1 * rightF);
       x = 0;
       y = 0;
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
       x += 0.1;
-      pid(LEFT_MOTOR_EN, speed3 * leftF);
-      pid(RIGHT_MOTOR_EN, (speed2 + x) * rightF);
+      pid(speed3 * leftF, (speed2 + x) * rightF);
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
       y += 0.1;
-      pid(LEFT_MOTOR_EN, (speed2 + y) * leftF);
-      pid(RIGHT_MOTOR_EN, speed3 * rightF);
+      pid((speed2 + y) * leftF, speed3 * rightF);
     } else {
       // If no sensor condition is met, stop the motors
-      pid(LEFT_MOTOR_EN, 0);
-      pid(RIGHT_MOTOR_EN, 0);
+      pid(speed0, speed0);
     }
   }
   

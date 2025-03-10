@@ -1,9 +1,14 @@
 #pragma once
 #include <Arduino.h>
+#include <PID_v1.h>
 #include "variables.h"
 #include "motorControl.h"
 
-void pid(int sideMotor, int speed){
+void pidSetup(){
+  leftPID.SetMode(AUTOMATIC);
+  leftPID.SetTunings(kp, ki, kd);
+}
+void pid(int leftRPMDesired, int rightRPMDesired){
   pidDesiredTCounter += dt;
 
   leftTheta = leftEncoderCount * 45;
@@ -22,43 +27,18 @@ void pid(int sideMotor, int speed){
     }
   }
   // We're currently tuning the left wheel so we don't need this
-  rightVDesired = 0;
+  rightRPMDesired = 0;
 
+  // Calculate the RPM of each wheel
   leftDeltaTheta = leftTheta - leftThetaPrevious;
   rightDeltaTheta = rightTheta - rightThetaPrevious;
 
-  leftRPM = leftDeltaTheta/(dt)*dpr;
+  //PID leftPID(&leftRPM, &leftV, &leftRPMDesired, kp, ki, kd, DIRECT);
 
-  rightRPM = rightDeltaTheta/(dt)*dpr;
-
-  // Calculation of error, integration value, 
-  // and voltage to be supplied to a motor
-  leftE = leftRPMDesired - leftRPM;
-  leftInte = leftIntePrevious + (dt * (leftE + leftEPrevious) * half);
-
-  leftV = (kp * leftE + ki * leftInte + (kd * (leftE - leftEPrevious))*1000 / dt);
-
-  rightE = rightRPMDesired - rightRPM;
-  rightInte = rightIntePrevious + (dt * (rightE + rightEPrevious) * half);
-
-  rightV = (kp * rightE + ki * rightInte + (kd * (rightE - rightEPrevious))*1000 / dt);
-
-  // Prevention of antiwinder
-  if (leftV > Vmax) {
-    leftV = Vmax;
-    leftInte = leftIntePrevious;
-  }
-  if (leftV < Vmin) {
-    leftV = Vmin;
-    leftInte = leftIntePrevious;
-  }
-  if (rightV > Vmax) {
-    rightV = Vmax;
-    rightInte = rightIntePrevious;
-  }
-  if (rightV < Vmin) {
-    rightV = Vmin;
-    rightInte = rightIntePrevious;
-  }
-
+  leftRPM = map(leftDeltaTheta/(dt)*dpr, 0, 200, 0, 255);
+  rightRPM = map(rightDeltaTheta/(dt)*dpr, 0, 200, 0, 255);
+  leftPID.Compute();
+  rightPID.Compute();
+  analogWrite(LEFT_MOTOR_EN, leftV);
+  analogWrite(RIGHT_MOTOR_EN, rightV);
 }
