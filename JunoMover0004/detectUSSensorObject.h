@@ -1,4 +1,6 @@
 #pragma once
+#include <Arduino.h>
+
 void detectUSSensorObject(){
   USTimeElapsed = 0;
   // Trigger the ultrasonic sensor
