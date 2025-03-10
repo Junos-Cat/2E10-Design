@@ -151,7 +151,10 @@ void loop() {
   }
 
   if (MessageTimeElapsed > 500){
-    sendMessage();
+    MessageTimeElapsed = 0;
+    // Send data to the laptop client
+    message = String(leftEncoderCount) + "," + String(distance) + ",";
+    client.println(message);
   }
   
   // --- Motor Control ---
