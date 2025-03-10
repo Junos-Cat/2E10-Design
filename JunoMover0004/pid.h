@@ -2,12 +2,14 @@
 #include <Arduino.h>
 #include <PID_v1.h>
 #include "variables.h"
-#include "motorControl.h"
 
 void pidSetup(){
   leftPID.SetMode(AUTOMATIC);
   leftPID.SetTunings(kp, ki, kd);
+  rightPID.SetMode(AUTOMATIC);
+  rightPID.SetTunings(kp, ki, kd);
 }
+
 void pid(int leftRPMDesired, int rightRPMDesired){
   pidDesiredTCounter += dt;
 
@@ -32,8 +34,6 @@ void pid(int leftRPMDesired, int rightRPMDesired){
   // Calculate the RPM of each wheel
   leftDeltaTheta = leftTheta - leftThetaPrevious;
   rightDeltaTheta = rightTheta - rightThetaPrevious;
-
-  //PID leftPID(&leftRPM, &leftV, &leftRPMDesired, kp, ki, kd, DIRECT);
 
   leftRPM = map(leftDeltaTheta/(dt)*dpr, 0, 200, 0, 255);
   rightRPM = map(rightDeltaTheta/(dt)*dpr, 0, 200, 0, 255);
