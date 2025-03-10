@@ -4,7 +4,7 @@
 
 // Encoder interrupt functions
 void left_encoder_interrupt(){
-  leftEncoderCount = leftEncoderCount + 1;
+  leftEncoderCount ++;
 }
 
 void right_encoder_interrupt(){
