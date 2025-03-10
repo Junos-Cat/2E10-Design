@@ -36,20 +36,64 @@ const int RIGHT_MOTOR_DIR_1 = 11;       // Right motor direction pin 2
 
 // --- Timing and Ultrasonic Sensor Variables ---
 float USTimeElapsed = 0, MessageTimeElapsed = 0;        // Accumulates elapsed time for periodic tasks
+float t, tPrevious=0, dt;
+float duration, distance, distancePrevious = 0;     // Duration of ultrasonic pulse and calculated distance
+String message;
+
+// Encoder/PID variables
+int leftEncoderCount = 0;
+int rightEncoderCount = 0;
+
 int leftTheta = 0;
 int rightTheta = 0;
 int leftThetaPrevious = 0;
 int rightThetaPrevious = 0;
 int leftDeltaTheta;
 int rightDeltaTheta;
-float t, tPrevious=0, dt;
-float duration, distance, distancePrevious = 0;     // Duration of ultrasonic pulse and calculated distance
-String message;
 
-// Encoder/pid variables
-volatile int leftEncoderCount = 0;
-volatile int rightEncoderCount = 0;
-bool interupt = false;
+float Vmax = 6;
+float Vmin = 0; // if we are able to reverse, we can't accuratley measure RPM
+float leftV = 0;
+float rightV = 0;
+float leftVPrevious;
+float rightVPrevious;
+
+float leftE;
+float leftEPrevious = 0;
+float leftInte;
+float leftIntePrevious = 0;
+float rightE;
+float rightEPrevious = 0;
+float rightInte;
+float rightIntePrevious = 0;
+
+float leftRPM;
+float leftRPMPrevious = 0;
+float leftRPMDesired;
+float leftVDesired;
+float leftRPMMax;
+float rightRPM;
+float rightRPMPrevious = 0;
+float rightRPMDesired;
+float rightVDesired;
+float rightRPMMax;
+
+float pidDesiredTCounter = 0;
+bool change = true;
+
+const float damper = 0;
+
+///////////////////////////https://www.youtube.com/watch?v=uXnDwojRb1g
+// To check if the steps really are present due to the steps in encoder values,
+// plot the delta degrees (multiply by a factor if you need to make it more visable) 
+// and if the steps in degree size corresponds to the steps in measured RPM, then
+// the hypothesis is correct
+const float kp = 0.01;// we can't just set this to as inte is also dependant on e
+const float ki = 0;
+const float kd = 0;
+
+const float dpr = 166.6666666;
+const float half = 0.5;
 
 // Encoder sensor pins
 const int LEFT_ENCODER = 2;

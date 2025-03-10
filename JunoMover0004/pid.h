@@ -3,13 +3,13 @@
 #include "variables.h"
 
 void pid(int sideMotor, int speed){
-  pidDesired TCounter += dt;
+  pidDesiredTCounter += dt;
 
   leftTheta = leftEncoderCount * 45;
   rightTheta = rightEncoderCount * 45;
 
-  if (otherTCounter>10000){
-    otherTCounter-=10000;
+  if (pidDesiredTCounter>10000){
+    pidDesiredTCounter-=10000;
     if (change){
       change = false;
       leftRPMDesired = 170;
@@ -22,21 +22,6 @@ void pid(int sideMotor, int speed){
   
   rightVDesired = 0;
 
-  //leftRPMDesired = leftRPMMax * (sin(2 * pi * 0.005 * t / 1000.0)) * sign(sin(2 * pi * 0.05 * t / 1000.0));
-  //rightRPMDesired = rightRPMMax * (sin(2 * pi * 0.005 * t / 1000.0)) * sign(sin(2 * pi * 0.05 * t / 1000.0));
-  // if (leftTheta < leftThetaPrevious){
-  //   leftDeltaTheta = 360 + leftTheta - leftThetaPrevious;
-  // }
-  // else {
-  //   leftDeltaTheta = leftTheta - leftThetaPrevious;
-  // }
-
-  // if (rightTheta < rightThetaPrevious){
-  //   rightDeltaTheta = 360 + rightTheta - rightThetaPrevious;
-  // }
-  // else {
-  //   rightDeltaTheta = rightTheta - rightThetaPrevious;
-  // }
   leftDeltaTheta = leftTheta - leftThetaPrevious;
   rightDeltaTheta = rightTheta - rightThetaPrevious;
 
@@ -77,7 +62,7 @@ void pid(int sideMotor, int speed){
   else {
     rightInte = 0;
   }
-  rightV = (rightVPrevious + kp * rightE + ki * rightInte + (kd * (rightE - rightEPrevious))*1000 / dt);
+  rightV = (kp * rightE + ki * rightInte + (kd * (rightE - rightEPrevious))*1000 / dt);
 
   // Prevention of antiwinder
   if (leftV > Vmax) {

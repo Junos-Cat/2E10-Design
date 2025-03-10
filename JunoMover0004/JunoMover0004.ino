@@ -56,7 +56,6 @@ void setup() {
 
   delay(3000);  // Delay to allow the system to stabilize
   Serial.println("Starting loop");
-  interupt = true;
 }
 
 void loop() {
