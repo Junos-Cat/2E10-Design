@@ -1,4 +1,5 @@
 #include <WiFiS3.h>
+#include "processCommand.h"
 
 // --- WiFi Settings ---
 const char* ssid = "Cheeky";             // Your WiFi network name
@@ -146,26 +147,7 @@ void loop() {
   // --- Ultrasonic Sensor Reading ---
   // If the robot is running, check the ultrasonic sensor every 500ms
   if (runBuggy && USTimeElapsed > 500) {
-    USTimeElapsed = 0;
-    // Trigger the ultrasonic sensor
-    //digitalWrite(US_TRIG, LOW);
-    delayMicroseconds(2);
-    digitalWrite(US_TRIG, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(US_TRIG, LOW);
-    // Measure the duration of the echo pulse
-    duration = pulseIn(US_ECHO, HIGH, 30000);
-    if (duration > 0) {
-      // Convert duration to distance in cm
-      distance = duration / 58.0;
-      if (distance <= 10) { // If an obstacle is too close (10 cm threshold)
-        USStop = true;
-      } else { // No obstacle
-        USStop = false;
-      }
-    } else {
-      USStop = false;
-    }
+    detectUSSensorObject();
   }
 
   if (MessageTimeElapsed > 500){
@@ -175,8 +157,6 @@ void loop() {
     client.println(message);
   }
   
-  
-
   // --- Motor Control ---
   // Stop the motors if the robot is not running or if an obstacle is detected
   if (!runBuggy || USStop) {
@@ -188,29 +168,22 @@ void loop() {
   } else {
     // Decide movement based on sensor input
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
-      // Serial.print("Forward");
-      DELAY = 5;
       analogWrite(LEFT_MOTOR_EN, speed1 * leftF);
       analogWrite(RIGHT_MOTOR_EN, speed1 * rightF);
       x = 0;
       y = 0;
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
-      // Serial.print("Turn Left");
       x += 0.1;
-      DELAY = 0;
       analogWrite(LEFT_MOTOR_EN, speed3 * leftF);
       analogWrite(RIGHT_MOTOR_EN, (speed2 + x) * rightF);
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
-      // Serial.print("Turn Right");
       y += 0.1;
-      DELAY = 0;
       analogWrite(LEFT_MOTOR_EN, (speed2 + y) * leftF);
       analogWrite(RIGHT_MOTOR_EN, speed3 * rightF);
     } else {
       // If no sensor condition is met, stop the motors
       analogWrite(LEFT_MOTOR_EN, 0);
       analogWrite(RIGHT_MOTOR_EN, 0);
-      DELAY = 0;
     }
   }
   
@@ -225,35 +198,7 @@ void loop() {
   //   analogWrite(RIGHT_MOTOR_EN, 0);
   //   delay(DELAY);
   // }
-
-  // Serial.println(leftEncoderCount);
-  // Serial.println()
-  
-  // check_left_encoder();
 }
 
-// void check_left_encoder(){
-
-//   if (leftEncoder != leftEncoderPrev){
-//     leftEncoderCount += 1;
-//   }  
-// }
 
 
-
-// --- Process Incoming Commands ---
-void processCommand(WiFiClient &client) {
-  while (client.available()) {
-    char c = client.read();
-    if (c=='G'){
-      runBuggy=true;
-      // Serial.print("command: ");
-      // Serial.println(c);
-    }
-    else{
-      runBuggy=false;
-      // Serial.print("command: ");
-      // Serial.println(c);
-    }
-  }
-}
