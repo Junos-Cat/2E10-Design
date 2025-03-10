@@ -1,6 +1,7 @@
 #pragma once
 #include <Arduino.h>
+#include "variables.h"
 
-void pid(sideMotor, speed){
-  analogueWrite(sideMotor, speed);
+void pid(int sideMotor, int speed){
+  analogWrite(sideMotor, speed);
 }

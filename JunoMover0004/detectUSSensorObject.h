@@ -1,5 +1,6 @@
 #pragma once
 #include <Arduino.h>
+#include "variables.h"
 
 void detectUSSensorObject(){
   USTimeElapsed = 0;

@@ -1,5 +1,6 @@
 #pragma once
 #include <Arduino.h>
+#include "variables.h"
 
 // --- Process Incoming Commands ---
 void processCommand(WiFiClient &client) {
