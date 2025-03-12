@@ -129,7 +129,7 @@ void loop() {
     // Decide movement based on sensor input
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
       // Move forward
-      if (mode = 1){// Speed mode
+      if (mode == 1){// Speed mode
         leftRPMDesired = speedDesired;
         rightRPMDesired = speedDesired;
         pidSpeedMode();
@@ -141,7 +141,7 @@ void loop() {
       }
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
       // Turn right
-      if (mode = 1){// Speed mode
+      if (mode == 1){// Speed mode
         leftRPMDesired = speedDesired * innerTurnFactorSpeed;
         rightRPMDesired = speedDesired * outerTurnFactorSpeed;
         pidSpeedMode();
@@ -153,7 +153,7 @@ void loop() {
       }
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
       // Turn left
-      if (mode = 1){// Speed mode
+      if (mode == 1){// Speed mode
         leftRPMDesired = speedDesired * innerTurnFactorSpeed;
         rightRPMDesired = speedDesired * outerTurnFactorSpeed;
         pidSpeedMode();
