@@ -5,13 +5,13 @@
 
 void pidSetup(){
   leftSpeedPID.SetMode(AUTOMATIC);
-  leftSpeedPID.SetTunings(kp, ki, kd);
+  leftSpeedPID.SetTunings(kpLeftSpeed, kiLeftSpeed, kdLeftSpeed);
   rightSpeedPID.SetMode(AUTOMATIC);
-  rightSpeedPID.SetTunings(kp, ki, kd);
+  rightSpeedPID.SetTunings(kpRightSpeed, kiRightSpeed, kdRightSpeed);
   leftDistancePID.SetMode(AUTOMATIC);
-  leftDistancePID.SetTunings(kp, ki, kd);
+  leftDistancePID.SetTunings(kpLeftDistance, kiLeftDistance, kdLeftDistance);
   rightDistancePID.SetMode(AUTOMATIC);
-  rightDistancePID.SetTunings(kp, ki, kd);
+  rightDistancePID.SetTunings(kpRightDistance, kiRightDistance, kdRightDistance);
 }
 
 void pidSpeedMode(){

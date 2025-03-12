@@ -67,6 +67,8 @@ void setup() {
 }
 
 void loop() {
+  // this needs to be changed to accept a command from the processing to update the mode
+  mode = 1;
   t = millis();
   dt = t - tPrevious;
   USTimeElapsed += dt;
@@ -88,7 +90,7 @@ void loop() {
   leftSpeed = leftRPM * distancePerTheta * 360;
   rightSpeed = rightRPM * distancePerTheta * 360;
   averageSpeed = (leftSpeed + rightSpeed) * 0.5;
-  
+
   // Calculate the total distance travelled
   leftTravelDistance += leftDeltaTheta * distancePerTheta;
   rightTravelDistance += rightDeltaTheta * distancePerTheta;

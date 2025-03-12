@@ -37,9 +37,12 @@ const int RIGHT_MOTOR_DIR_2 = 10;       // Right motor direction pin 1
 const int RIGHT_MOTOR_DIR_1 = 11;       // Right motor direction pin 2
 
 // --- Timing and Ultrasonic Sensor Variables ---
-float USTimeElapsed = 0, MessageTimeElapsed = 0;        // Accumulates elapsed time for periodic tasks
+float USTimeElapsed = 0;
+float MessageTimeElapsed = 0;        
 float t, tPrevious=0, dt;
-float duration, usSensorDistance, usSensorDistancePrevious = 0;     // Duration of ultrasonic pulse and calculated usSensorusSensorDistance
+float usSensorDuration
+float usSensorDistance
+float usSensorDistancePrevious = 0;
 String message;
 
 // Encoder/PID variables
@@ -53,6 +56,7 @@ int rightThetaPrevious = 0;
 int leftDeltaTheta;
 int rightDeltaTheta;
 
+// PID
 float Vmax = 6;
 float Vmin = 0; // if we are able to reverse, we can't accuratley measure RPM
 double leftV = 0;
@@ -65,6 +69,7 @@ double rightRPM;
 double rightRPMDesired;
 double rightDistanceDesired;
 
+// PID step function
 float pidDesiredTCounter = 0;
 bool change = true;
 
@@ -75,14 +80,28 @@ const float damper = 0;
 // plot the delta degrees (multiply by a factor if you need to make it more visable) 
 // and if the steps in degree size corresponds to the steps in measured RPM, then
 // the hypothesis is correct
-double kp = 0.01;// we can't just set this to as inte is also dependant on e
-double ki = 0;
-double kd = 0;
 
-PID leftSpeedPID(&leftRPM, &leftV, &leftRPMDesired, kp, ki, kd, 0);
-PID rightSpeedPID(&rightRPM, &rightV, &rightRPMDesired, kp, ki, kd, 0);
-PID leftDistancePID(&usSensorDistance, &leftV, &leftDistanceDesired, kp, ki, kd, 0);
-PID rightDistancePID(&usSensorDistance, &rightV, &rightDistanceDesired, kp, ki, kd, 0);
+// PID calibration coefficients
+double kpLeftSpeed = 0.01;
+double kiLeftSpeed = 0;
+double kdLeftSpeed = 0;
+
+double kpRightSpeed = 0.01;
+double kiRightSpeed = 0;
+double kdRightSpeed = 0;
+
+double kpLeftDistance = 0.01;
+double kiLeftDistance = 0;
+double kdLeftDistance = 0;
+
+double kpRightDistance = 0.01;
+double kiRightDistance = 0;
+double kdRightDistance = 0;
+
+PID leftSpeedPID(&leftRPM, &leftV, &leftRPMDesired, kpLeftSpeed, kiLeftSpeed, kdLeftSpeed, 0);
+PID rightSpeedPID(&rightRPM, &rightV, &rightRPMDesired, kpRightSpeed, kiRightSpeed, kdRightSpeed, 0);
+PID leftDistancePID(&usSensorDistance, &leftV, &leftDistanceDesired, kpLeftDistance, kiLeftDistance, kdLeftDistance, 0);
+PID rightDistancePID(&usSensorDistance, &rightV, &rightDistanceDesired, kpRightDistance, kiRightDistance, kdRightDistance, 0);
 
 const float dpr = 166.6666666;
 const float half = 0.5;
