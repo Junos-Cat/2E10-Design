@@ -27,8 +27,12 @@ const float outerTurnFactorSpeed = 1.2;
 const float innerTurnFactorDistance = 1.2;
 const float outerTurnFactorDistance = 0.8;
 
-float x = 0;                  // Variable for incremental adjustments (e.g., turning)
-float y = 0;
+// Message stuff
+float averageSpeed;
+float leftSpeed;
+float rightSpeed;
+int mode;
+
 int DELAY = 0;                // Delay used in movement control
 bool USStop = false;          // Flag to stop when an obstacle is detected by the ultrasonic sensor
 
@@ -45,8 +49,8 @@ float USTimeElapsed = 0;
 float MessageTimeElapsed = 0;        
 float t, tPrevious=0, dt;
 float usSensorDuration;
-float usSensorDistance;
-float usSensorDistancePrevious = 0;
+double usSensorDistance;
+double usSensorDistancePrevious = 0;
 String message;
 
 // Encoder/PID variables
