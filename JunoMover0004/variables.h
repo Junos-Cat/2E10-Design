@@ -60,8 +60,10 @@ double rightV = 0;
 
 double leftRPM;
 double leftRPMDesired;
+double leftDistanceDesired;
 double rightRPM;
 double rightRPMDesired;
+double rightDistanceDesired;
 
 float pidDesiredTCounter = 0;
 bool change = true;
@@ -77,8 +79,10 @@ double kp = 0.01;// we can't just set this to as inte is also dependant on e
 double ki = 0;
 double kd = 0;
 
-PID leftPID(&leftRPM, &leftV, &leftRPMDesired, kp, ki, kd, 0);
-PID rightPID(&rightRPM, &rightV, &rightRPMDesired, kp, ki, kd, 0);
+PID leftSpeedPID(&leftRPM, &leftV, &leftRPMDesired, kp, ki, kd, 0);
+PID rightSpeedPID(&rightRPM, &rightV, &rightRPMDesired, kp, ki, kd, 0);
+PID leftDistancePID(&leftRPM, &leftV, &leftDistanceDesired, kp, ki, kd, 0);
+PID rightDistancePID(&rightRPM, &rightV, &rightDistanceDesired, kp, ki, kd, 0);
 
 const float dpr = 166.6666666;
 const float half = 0.5;
