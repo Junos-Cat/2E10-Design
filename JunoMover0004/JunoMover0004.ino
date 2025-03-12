@@ -72,14 +72,27 @@ void loop() {
   USTimeElapsed += dt;
   MessageTimeElapsed += dt;
 
+  // Convert to degrees
   leftTheta = leftEncoderCount * 45;
   rightTheta = rightEncoderCount * 45;
+
+  // Calculate the change in degrees of each wheel
   leftDeltaTheta = leftTheta - leftThetaPrevious;
   rightDeltaTheta = rightTheta - rightThetaPrevious;
 
+  // Calculate the RPM of each wheel
+  leftRPM = map(leftDeltaTheta/(dt)*dpr, 0, 200, 0, 255);
+  rightRPM = map(rightDeltaTheta/(dt)*dpr, 0, 200, 0, 255);
+
+  // Calculate the speed of each wheel
+  leftSpeed = leftRPM * distancePerTheta * 360;
+  rightSpeed = rightRPM * distancePerTheta * 360;
+  averageSpeed = (leftSpeed + rightSpeed) * 0.5;
+  
+  // Calculate the total distance travelled
   leftTravelDistance += leftDeltaTheta * distancePerTheta;
   rightTravelDistance += rightDeltaTheta * distancePerTheta;
-  averageTravelDistance = (leftTravelDistance + rightTravelDistance)*0.5;
+  averageTravelDistance = (leftTravelDistance + rightTravelDistance) * 0.5;
 
   // Check incoming HTTP request
   WiFiClient client = server.available();
