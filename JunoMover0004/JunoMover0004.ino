@@ -75,7 +75,7 @@ void loop() {
   USTimeElapsed += dt;
   MessageTimeElapsed += dt;
 
-  if (dt > 100){
+  // if (dt > 100){
 
   // Convert to degrees
   leftTheta = leftEncoderCount * 45;
@@ -166,7 +166,7 @@ void loop() {
     }
   }
   serialPlotter();
-  }
+  
   // Update time for next loop iteration
   tPrevious = t;
   leftThetaPrevious = leftTheta;
