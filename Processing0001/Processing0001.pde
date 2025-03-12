@@ -2,15 +2,12 @@ import processing.net.*;
 import controlP5.*;
 
 Client myClient;
-String data, travelMessage;
-float objectDistPrev, objectDistPrevPrev, objectDist, travelDist;
+String data;
+float objectDist, travelDist;
 String buggyIP = "192.168.0.193";
 String command = "STOP";
-String message = "na", messagePrev = "NA";
 
-// ControlP5 objects
-ControlP5 cp5;
-Textlabel avgSpeedLabel, wheelSpeedsLabel, distanceLabel, modeLabel, messageLabel, voltageLabel, wifiLabel, refSpeedLabel;
+// Sensor variables for display
 float avgSpeed, speedLeft, speedRight, voltageLeft, voltageRight, refSpeed;
 
 // UI Constants
@@ -22,8 +19,17 @@ color warningColor = #f1c40f;
 int windowWidth = 1000;
 int windowHeight = 800;
 
+// ControlP5 objects
+ControlP5 cp5;
+Textlabel avgSpeedLabel, wheelSpeedsLabel, distanceLabel, modeLabel, messageLabel, voltageLabel;
+  
+// Additional graphical components:
+Chart speedChart;      // Line chart for speed data
+Chart voltageChart;    // Bar chart for motor voltages
+Knob refSpeedGauge;    // Gauge for reference speed
+Toggle wifiToggle;     // Wi-Fi connection status indicator
+
 void setup() {
-  // Set the window size
   size(1000, 800);
   
   // Create a client to connect to the buggy
@@ -31,12 +37,14 @@ void setup() {
   myClient.write("I am a new client");
   
   cp5 = new ControlP5(this);
-  
-  // Set font and style settings
   PFont font = createFont("Arial", 14);
   cp5.setFont(font);
   
+  // Create basic dashboard elements (text labels, buttons, text field)
   createDashboardElements();
+  
+  // Create additional charts and gauges
+  createChartsAndGauges();
 }
 
 void draw() {
@@ -44,10 +52,22 @@ void draw() {
   drawHeader();
   updateSensorData();
   displayConnectionStatus();
+  
+  // Update charts with the latest values:
+  speedChart.push("avgSpeed", avgSpeed);
+  speedChart.push("leftSpeed", speedLeft);
+  speedChart.push("rightSpeed", speedRight);
+  
+  voltageChart.setData("leftVolt", new float[]{voltageLeft});
+  voltageChart.setData("rightVolt", new float[]{voltageRight});
+  
+  refSpeedGauge.setValue(refSpeed);
 }
 
+///////////////////////
+// Dashboard Creation
+///////////////////////
 void createDashboardElements() {
-  // Info Panel
   int panelY = 80;
   int panelSpacing = 40;
   
@@ -55,32 +75,30 @@ void createDashboardElements() {
                     .setText("Average Speed: 0.0 cm/s")
                     .setPosition(30, panelY)
                     .setColorValue(#ecf0f1);
-
+  
   wheelSpeedsLabel = cp5.addTextlabel("wheelSpeeds")
                        .setText("Wheel Speeds: Left=0.0 cm/s | Right=0.0 cm/s")
                        .setPosition(30, panelY + panelSpacing)
                        .setColorValue(#ecf0f1);
-
+  
   distanceLabel = cp5.addTextlabel("distance")
                     .setText("Distance Travelled: 0.0 cm")
                     .setPosition(30, panelY + panelSpacing*2)
                     .setColorValue(#ecf0f1);
-
+  
   voltageLabel = cp5.addTextlabel("voltage")
                    .setText("Motor Voltages: Left=0.0V | Right=0.0V")
                    .setPosition(30, panelY + panelSpacing*3)
                    .setColorValue(#ecf0f1);
-
+  
   messageLabel = cp5.addTextlabel("message")
                    .setText("Object Detection: No object detected")
                    .setPosition(30, panelY + panelSpacing*4)
                    .setColorValue(#ecf0f1);
-
-  // Control Panel
+  
   createControlButtons();
   createSpeedInput();
   
-  // Mode Indicator
   modeLabel = cp5.addTextlabel("mode")
                 .setText("Current Mode: STOPPED")
                 .setPosition(30, 400)
@@ -127,6 +145,68 @@ void createSpeedInput() {
      .setColorActive(#2980b9);
 }
 
+/////////////////////////////
+// Additional Charts & Gauges
+/////////////////////////////
+void createChartsAndGauges() {
+  // Create a line chart for speed values
+  speedChart = cp5.addChart("speedChart")
+                  .setPosition(30, 500)
+                  .setSize(400, 150)
+                  .setRange(0, 100)    // Adjust as needed for speed range
+                  .setView(Chart.LINE)
+                  .setColorCaptionLabel(color(0))
+                  .setStrokeWeight(2);
+  // Add datasets for average, left, and right speeds
+  speedChart.addDataSet("avgSpeed");
+  speedChart.addDataSet("leftSpeed");
+  speedChart.addDataSet("rightSpeed");
+  speedChart.setColors("avgSpeed", color(255, 0, 0));    // Red
+  speedChart.setColors("leftSpeed", color(0, 255, 0));   // Green
+  speedChart.setColors("rightSpeed", color(0, 0, 255));  // Blue
+  // Initialize each dataset with an array (history length, e.g., 60 data points)
+  speedChart.setData("avgSpeed", new float[60]);
+  speedChart.setData("leftSpeed", new float[60]);
+  speedChart.setData("rightSpeed", new float[60]);
+  
+  // Create a bar chart for motor voltages
+  voltageChart = cp5.addChart("voltageChart")
+                    .setPosition(450, 500)
+                    .setSize(300, 150)
+                    .setRange(0, 12)  // Assuming 0-12V range
+                    .setView(Chart.BAR)
+                    .setColorCaptionLabel(color(0));
+  // Add two datasets for left and right motor voltages
+  voltageChart.addDataSet("leftVolt");
+  voltageChart.addDataSet("rightVolt");
+  voltageChart.setColors("leftVolt", color(0, 102, 255));   // Blue
+  voltageChart.setColors("rightVolt", color(255, 150, 0));  // Orange
+  voltageChart.setData("leftVolt", new float[]{0});
+  voltageChart.setData("rightVolt", new float[]{0});
+  
+  // Create a gauge for reference speed using a Knob
+  refSpeedGauge = cp5.addKnob("refSpeedGauge")
+                     .setPosition(800, 500)
+                     .setRadius(50)
+                     .setRange(0, 100)  // Adjust as needed
+                     .setValue(0)
+                     .setLock(true);  // Display only
+  refSpeedGauge.getCaptionLabel().setPaddingY(10);
+  
+  // Create a Wi-Fi connection status toggle (non-interactive)
+  wifiToggle = cp5.addToggle("wifiToggle")
+                  .setPosition(800, 600)
+                  .setSize(50, 20)
+                  .setValue(false)
+                  .setMode(ControlP5.SWITCH)
+                  .setLabel("WiFi");
+  wifiToggle.getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
+  wifiToggle.setLock(true);
+}
+
+/////////////////////////
+// Header & Status Display
+/////////////////////////
 void drawHeader() {
   fill(secondaryColor);
   noStroke();
@@ -142,8 +222,12 @@ void displayConnectionStatus() {
   textSize(12);
   fill(#ecf0f1);
   text("Wi-Fi Connection", 660, 45);
+  wifiToggle.setValue(myClient.active());
 }
 
+/////////////////////////
+// Sensor Data Update
+/////////////////////////
 void updateSensorData() {
   if (myClient.available() > 0) {
     data = myClient.readString();
@@ -151,14 +235,14 @@ void updateSensorData() {
     if (data != null) {
       String[] splitData = split(data, ',');
       
-      if (splitData.length >= 6) {
+       if (splitData.length >= 6) {
         try {
-          travelDist = float(splitData[0]);
-          objectDist = float(splitData[1]);
-          speedLeft = float(splitData[2]);
-          speedRight = float(splitData[3]);
-          voltageLeft = float(splitData[4]);
-          voltageRight = float(splitData[5]);
+          speedAve = float(splitData[0]);
+          speedLeft = float(splitData[1]);
+          speedRıght = float(splitData[2]);
+          dıstanceTravelled = float(splitData[3]);
+          objectDıstance = float(splitData[4]);
+          messageBuggy = float(splitData[5]);
           
           updateDashboardMetrics();
           updateObjectDetection();
@@ -190,6 +274,9 @@ void updateObjectDetection() {
   messageLabel.setText("Object Detection: " + statusMsg);
 }
 
+//////////////////////
+// Command Functions
+//////////////////////
 void STOP() {
   command = "S";
   sendCommand(command);
