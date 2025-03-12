@@ -109,7 +109,7 @@ void loop() {
   if (MessageTimeElapsed > 500){
     MessageTimeElapsed = 0;
     // Send data to the laptop client
-    message = String(leftEncoderCount) + "," + String(distance) + "," ;
+    message = String(averageSpeed) + "," + String(leftSpeed) + "," + String(rightSpeed) + "," + String(averageTravelDistance) + "," + String(usSensorDistance) + "," ;
     client.println(message);
   }
   
@@ -123,8 +123,8 @@ void loop() {
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
       // Move forward
       if (mode = 1){// Speed mode
-        leftRPMDesired = speed1;
-        rightRPMDesired = speed1;
+        leftRPMDesired = speedDesired;
+        rightRPMDesired = speedDesired;
         pidSpeedMode();
       }
       else{// Distance mode
@@ -135,25 +135,25 @@ void loop() {
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
       // Turn right
       if (mode = 1){// Speed mode
-        leftRPMDesired = speed1 * innerTurnFactor;
-        rightRPMDesired = speed1 * outerTurnFactor;
+        leftRPMDesired = speedDesired * innerTurnFactorSpeed;
+        rightRPMDesired = speedDesired * outerTurnFactorSpeed;
         pidSpeedMode();
       }
       else{// Distance mode
-        leftDistanceDesired = distanceDesired * innerTurnFactor;
-        rightDistanceDesired = distanceDesired * outerTurnFactor;
+        leftDistanceDesired = distanceDesired * innerTurnFactorDistance;
+        rightDistanceDesired = distanceDesired * outerTurnFactorDistance;
         pidDistanceMode();
       }
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
       // Turn left
       if (mode = 1){// Speed mode
-        leftRPMDesired = speed1 * innerTurnFactor;
-        rightRPMDesired = speed1 * outerTurnFactor;
+        leftRPMDesired = speedDesired * innerTurnFactorSpeed;
+        rightRPMDesired = speedDesired * outerTurnFactorSpeed;
         pidSpeedMode();
       }
       else{// Distance mode
-        leftDistanceDesired = distanceDesired * outerTurnFactor;
-        rightDistanceDesired = distanceDesired * innerTurnFactor;
+        leftDistanceDesired = distanceDesired * outerTurnFactorDistance;
+        rightDistanceDesired = distanceDesired * innerTurnFactorDistance;
         pidDistanceMode();
       }
     } else {

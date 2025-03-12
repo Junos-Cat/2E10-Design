@@ -18,11 +18,15 @@ const int US_ECHO = 12;       // Ultrasonic sensor echo pin
 
 // --- Speed and Control Parameters ---
 const int speed0 = 0;
-const int speed1 = 140;       // Base speed for forward motion
+int speedDesired = 140;       // Base speed for forward motion
 const int speed2 = 140;       // Base speed for turning (adjustable)
 const int speed3 = 0;         // Speed for stop
-const float innerTurnFactor = 0.8;     // Correction factor for left motor
-const float outerTurnFactor = 1.2;       // Correction factor for right motor
+int distanceDesired = 20;
+const float innerTurnFactorSpeed = 0.8;
+const float outerTurnFactorSpeed = 1.2;
+const float innerTurnFactorDistance = 1.2;
+const float outerTurnFactorDistance = 0.8;
+
 float x = 0;                  // Variable for incremental adjustments (e.g., turning)
 float y = 0;
 int DELAY = 0;                // Delay used in movement control
@@ -40,8 +44,8 @@ const int RIGHT_MOTOR_DIR_1 = 11;       // Right motor direction pin 2
 float USTimeElapsed = 0;
 float MessageTimeElapsed = 0;        
 float t, tPrevious=0, dt;
-float usSensorDuration
-float usSensorDistance
+float usSensorDuration;
+float usSensorDistance;
 float usSensorDistancePrevious = 0;
 String message;
 
