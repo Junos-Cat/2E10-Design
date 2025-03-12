@@ -88,7 +88,7 @@ bool change = true;
 // the hypothesis is correct
 
 // PID calibration coefficients
-double kpLeftSpeed = 0.1;
+double kpLeftSpeed = 0.5;
 double kiLeftSpeed = 0;
 double kdLeftSpeed = 0;
 
