@@ -19,12 +19,13 @@ void pidSpeedMode(){
 
   // Step function that changes the desired RPM of the left motor
   if (pidDesiredTCounter>10000){
-    pidDesiredTCounter-=10000;
     if (change){
+      pidDesiredTCounter-=10000;
       change = false;
       leftRPMDesired = random(60, 200);
     }
     else{
+      pidDesiredTCounter-=5000;
       change = true;
       leftRPMDesired = 0;
     }
