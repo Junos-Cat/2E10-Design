@@ -168,7 +168,7 @@ void loop() {
       analogWrite(LEFT_MOTOR_EN, speed0);
       analogWrite(RIGHT_MOTOR_EN, speed0);
     }
-    serialPlotter();
+    serialPlotter(leftRPM, leftRPMDesired);
   }
   
   
