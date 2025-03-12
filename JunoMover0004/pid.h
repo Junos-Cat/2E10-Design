@@ -10,7 +10,7 @@ void pidSetup(){
   rightPID.SetTunings(kp, ki, kd);
 }
 
-void pid(int leftRPMDesired, int rightRPMDesired){
+void pidSpeedMode(int leftRPMDesired, int rightRPMDesired){
   pidDesiredTCounter += dt;
 
   leftTheta = leftEncoderCount * 45;
@@ -41,4 +41,6 @@ void pid(int leftRPMDesired, int rightRPMDesired){
   rightPID.Compute();
   analogWrite(LEFT_MOTOR_EN, leftV);
   analogWrite(RIGHT_MOTOR_EN, rightV);
+}
+void pidDistanceMode(int leftRPMDesired, int rightRPMDesired){
 }

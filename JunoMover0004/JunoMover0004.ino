@@ -108,15 +108,16 @@ void loop() {
   } else {
     // Decide movement based on sensor input
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
-      pid(speed1 * leftF, speed1 * rightF);
+      // Move forward
+      pid(speed1, speed1);
       x = 0;
       y = 0;
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
-      x += 0.1;
-      pid(speed3 * leftF, (speed2 + x) * rightF);
+      // Turn right
+      pid(speed3 * outerTurnFactor, speed2 * innerTurnFactor);
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
-      y += 0.1;
-      pid((speed2 + y) * leftF, speed3 * rightF);
+      // Turn left
+      pid(speed2 * innerTurnFactor, speed3 * outerTurnFactor);
     } else {
       // If no sensor condition is met, stop the motors
       pid(speed0, speed0);
