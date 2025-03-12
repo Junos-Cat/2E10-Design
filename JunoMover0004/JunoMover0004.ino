@@ -7,6 +7,7 @@
 #include "pid.h"
 #include "variables.h"
 #include "encoderInterrupt.h"
+#include "pidCalibrationPrinting.h"
 
 void pid();
 
@@ -73,6 +74,8 @@ void loop() {
   dt = t - tPrevious;
   USTimeElapsed += dt;
   MessageTimeElapsed += dt;
+
+  if (dt > 100){
 
   // Convert to degrees
   leftTheta = leftEncoderCount * 45;
@@ -162,7 +165,8 @@ void loop() {
       analogWrite(RIGHT_MOTOR_EN, speed0);
     }
   }
-  
+  serialPlotter();
+  }
   // Update time for next loop iteration
   tPrevious = t;
   leftThetaPrevious = leftTheta;
