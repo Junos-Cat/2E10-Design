@@ -31,7 +31,7 @@ const float outerTurnFactorDistance = 0.8;
 float averageSpeed;
 float leftSpeed;
 float rightSpeed;
-int mode;
+int mode = 1;
 
 int DELAY = 0;                // Delay used in movement control
 bool USStop = false;          // Flag to stop when an obstacle is detected by the ultrasonic sensor
@@ -81,8 +81,6 @@ double rightDistanceDesired;
 float pidDesiredTCounter = 0;
 bool change = true;
 
-const float damper = 0;
-
 ///////////////////////////https://www.youtube.com/watch?v=uXnDwojRb1g
 // To check if the steps really are present due to the steps in encoder values,
 // plot the delta degrees (multiply by a factor if you need to make it more visable) 
@@ -90,19 +88,19 @@ const float damper = 0;
 // the hypothesis is correct
 
 // PID calibration coefficients
-double kpLeftSpeed = 0.01;
+double kpLeftSpeed = 1;
 double kiLeftSpeed = 0;
 double kdLeftSpeed = 0;
 
-double kpRightSpeed = 0.01;
+double kpRightSpeed = 0;
 double kiRightSpeed = 0;
 double kdRightSpeed = 0;
 
-double kpLeftDistance = 0.01;
+double kpLeftDistance = 0;
 double kiLeftDistance = 0;
 double kdLeftDistance = 0;
 
-double kpRightDistance = 0.01;
+double kpRightDistance = 0;
 double kiRightDistance = 0;
 double kdRightDistance = 0;
 

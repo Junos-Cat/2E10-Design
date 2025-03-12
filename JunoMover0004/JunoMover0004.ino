@@ -121,6 +121,10 @@ void loop() {
   if (!runBuggy || USStop) {
     analogWrite(LEFT_MOTOR_EN, speed0);
     analogWrite(RIGHT_MOTOR_EN, speed0);
+    leftRPMDesired = 0;
+    rightRPMDesired = 0;
+    leftDistanceDesired = 0;
+    rightDistanceDesired = 0;
   } else {
     // Decide movement based on sensor input
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
@@ -164,8 +168,9 @@ void loop() {
       analogWrite(LEFT_MOTOR_EN, speed0);
       analogWrite(RIGHT_MOTOR_EN, speed0);
     }
+    serialPlotter();
   }
-  serialPlotter();
+  
   
   // Update time for next loop iteration
   tPrevious = t;
