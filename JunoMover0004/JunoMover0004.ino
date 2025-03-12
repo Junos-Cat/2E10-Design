@@ -101,32 +101,50 @@ void loop() {
   // --- Motor Control ---
   // Stop the motors if the robot is not running or if an obstacle is detected
   if (!runBuggy || USStop) {
-    pid(LEFT_MOTOR_EN, speed3);
-    pid(RIGHT_MOTOR_EN, speed3);
-    x = 0;
-    y = 0;
+    analogWrite(LEFT_MOTOR_EN, speed0);
+    analogWrite(RIGHT_MOTOR_EN, speed0);
   } else {
     // Decide movement based on sensor input
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
       // Move forward
       if (mode = 1){// Speed mode
-        leftRPMDesired = speed1
-        pidSpeedMode(speed1, speed1);
+        leftRPMDesired = speed1;
+        rightRPMDesired = speed1;
+        pidSpeedMode();
       }
       else{// Distance mode
-        pidDistanceMode(disiredDistance);
+        leftDistanceDesired = distanceDesired;
+        rightDistanceDesired = distanceDesired;
+        pidDistanceMode();
       }
-      x = 0;
-      y = 0;
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
       // Turn right
-      pidSpeedMode(speed3 * outerTurnFactor, speed2 * innerTurnFactor);
+      if (mode = 1){// Speed mode
+        leftRPMDesired = speed1 * innerTurnFactor;
+        rightRPMDesired = speed1 * outerTurnFactor;
+        pidSpeedMode();
+      }
+      else{// Distance mode
+        leftDistanceDesired = distanceDesired * innerTurnFactor;
+        rightDistanceDesired = distanceDesired * outerTurnFactor;
+        pidDistanceMode();
+      }
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
       // Turn left
-      pidSpeedMode(speed2 * innerTurnFactor, speed3 * outerTurnFactor);
+      if (mode = 1){// Speed mode
+        leftRPMDesired = speed1 * innerTurnFactor;
+        rightRPMDesired = speed1 * outerTurnFactor;
+        pidSpeedMode();
+      }
+      else{// Distance mode
+        leftDistanceDesired = distanceDesired * outerTurnFactor;
+        rightDistanceDesired = distanceDesired * innerTurnFactor;
+        pidDistanceMode();
+      }
     } else {
       // If no sensor condition is met, stop the motors
-      pidSpeedMode(speed0, speed0);
+      analogWrite(LEFT_MOTOR_EN, speed0);
+      analogWrite(RIGHT_MOTOR_EN, speed0);
     }
   }
   
@@ -134,7 +152,7 @@ void loop() {
   tPrevious = t;
   leftThetaPrevious = leftTheta;
   rightThetaPrevious = rightTheta;
-  distancePrevious = distance;
+  usSensorDistancePrevious = usSensorDistance;
   // if (DELAY > 0) {
   //   delay(20);
   //   analogWrite(LEFT_MOTOR_EN, 0);

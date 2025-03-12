@@ -39,7 +39,7 @@ const int RIGHT_MOTOR_DIR_1 = 11;       // Right motor direction pin 2
 // --- Timing and Ultrasonic Sensor Variables ---
 float USTimeElapsed = 0, MessageTimeElapsed = 0;        // Accumulates elapsed time for periodic tasks
 float t, tPrevious=0, dt;
-float duration, distance, distancePrevious = 0;     // Duration of ultrasonic pulse and calculated distance
+float duration, usSensorDistance, usSensorDistancePrevious = 0;     // Duration of ultrasonic pulse and calculated usSensorusSensorDistance
 String message;
 
 // Encoder/PID variables
@@ -81,8 +81,8 @@ double kd = 0;
 
 PID leftSpeedPID(&leftRPM, &leftV, &leftRPMDesired, kp, ki, kd, 0);
 PID rightSpeedPID(&rightRPM, &rightV, &rightRPMDesired, kp, ki, kd, 0);
-PID leftDistancePID(&leftRPM, &leftV, &leftDistanceDesired, kp, ki, kd, 0);
-PID rightDistancePID(&rightRPM, &rightV, &rightDistanceDesired, kp, ki, kd, 0);
+PID leftDistancePID(&usSensorDistance, &leftV, &leftDistanceDesired, kp, ki, kd, 0);
+PID rightDistancePID(&usSensorDistance, &rightV, &rightDistanceDesired, kp, ki, kd, 0);
 
 const float dpr = 166.6666666;
 const float half = 0.5;

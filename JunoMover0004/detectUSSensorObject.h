@@ -14,8 +14,8 @@ void detectUSSensorObject(){
   duration = pulseIn(US_ECHO, HIGH, 30000);
   if (duration > 0) {
     // Convert duration to distance in cm
-    distance = duration / 58.0;
-    if (distance <= 10) { // If an obstacle is too close (10 cm threshold)
+    usSensorDistance = duration / 58.0;
+    if (usSensorDistance <= 10) { // If an obstacle is too close (10 cm threshold)
       USStop = true;
     } else { // No obstacle
       USStop = false;

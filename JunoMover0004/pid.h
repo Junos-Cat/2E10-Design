@@ -10,7 +10,7 @@ void pidSetup(){
   rightPID.SetTunings(kp, ki, kd);
 }
 
-void pidSpeedMode(int leftRPMDesired, int rightRPMDesired){
+void pidSpeedMode(){
   pidDesiredTCounter += dt;
 
   // Step function that changes the desired RPM of the left motor
