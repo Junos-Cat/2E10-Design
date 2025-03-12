@@ -4,10 +4,14 @@
 #include "variables.h"
 
 void pidSetup(){
-  leftPID.SetMode(AUTOMATIC);
-  leftPID.SetTunings(kp, ki, kd);
-  rightPID.SetMode(AUTOMATIC);
-  rightPID.SetTunings(kp, ki, kd);
+  leftSpeedPID.SetMode(AUTOMATIC);
+  leftSpeedPID.SetTunings(kp, ki, kd);
+  rightSpeedPID.SetMode(AUTOMATIC);
+  rightSpeedPID.SetTunings(kp, ki, kd);
+  leftDistancePID.SetMode(AUTOMATIC);
+  leftDistancePID.SetTunings(kp, ki, kd);
+  rightDistancePID.SetMode(AUTOMATIC);
+  rightDistancePID.SetTunings(kp, ki, kd);
 }
 
 void pidSpeedMode(){
