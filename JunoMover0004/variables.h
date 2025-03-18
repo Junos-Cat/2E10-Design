@@ -90,16 +90,16 @@ bool change = true;
 
 const float damper = 0;
 
-int mode = 2;
+int mode = 1;
 
 ///////////////////////////https://www.youtube.com/watch?v=uXnDwojRb1g
 // To check if the steps really are present due to the steps in encoder values,
 // plot the delta degrees (multiply by a factor if you need to make it more visable) 
 // and if the steps in degree size corresponds to the steps in measured RPM, then
 // the hypothesis is correct
-const float kpSpeed = 0.01;
+const float kpSpeed = 0.005;
 const float kiSpeed = 0;
-const float kdSpeed = 0;//3;
+const float kdSpeed = 0.01;//3;
 
 const float kpDistance = 0.01;
 const float kiDistance = 0;

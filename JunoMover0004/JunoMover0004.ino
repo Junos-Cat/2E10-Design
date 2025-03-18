@@ -82,19 +82,22 @@ void loop() {
   currentLeftRPM = leftDeltaTheta/(dt)*dpr;
   currentRightRPM = rightDeltaTheta/(dt)*dpr;
   
-  // This is to increase the responsiveness of the motors
-  if (leftRPMPrevious > RPMDesired * half){// Running average
-    leftRPM = (currentLeftRPM + leftRPMPrevious)*half;
-  }
-  else{// No average
-    leftRPM = currentLeftRPM;
-  }
-  if (rightRPMPrevious > RPMDesired * half){// Running average
-    rightRPM = (currentRightRPM + rightRPMPrevious)*half;
-  }
-  else{// No average
-    rightRPM = currentRightRPM;
-  }
+  // // This is to increase the responsiveness of the motors
+  // if (leftRPMPrevious > RPMDesired * half){// Running average
+  //   leftRPM = (currentLeftRPM + leftRPMPrevious)*half;
+  // }
+  // else{// No average
+  //   leftRPM = currentLeftRPM;
+  // }
+  // if (rightRPMPrevious > RPMDesired * half){// Running average
+  //   rightRPM = (currentRightRPM + rightRPMPrevious)*half;
+  // }
+  // else{// No average
+  //   rightRPM = currentRightRPM;
+  // }
+
+  leftRPM = (currentLeftRPM + leftRPMPrevious)*half;
+  rightRPM = (currentRightRPM + rightRPMPrevious)*half;
 
   // Check incoming HTTP request
   WiFiClient client = server.available();
