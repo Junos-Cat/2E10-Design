@@ -4,7 +4,7 @@
 #include "motorControl.h"
 
 void pid(){
-  pidDesiredTCounter += dt;
+  // pidDesiredTCounter += dt;
   // // Step function that changes the desired RPM of the left motor
   // if (pidDesiredTCounter>20000){
   //   pidDesiredTCounter-=20000;

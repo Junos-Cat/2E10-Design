@@ -57,8 +57,8 @@ void setup() {
 
   delay(3000);  // Delay to allow the system to stabilize
   Serial.println("Starting loop");
-  delay(1000);
-  runBuggy = true;
+  //delay(1000);
+  //runBuggy = true;
 }
 
 void loop() {
@@ -112,8 +112,8 @@ void loop() {
   if (MessageTimeElapsed > 500){
     MessageTimeElapsed = 0;
     // Send data to the laptop client
-    message = String(leftEncoderCount) + "," + String(USSensorDistance) + "," ;
-    client.println(message);
+    messageOut = String(averageTravelDistance) + "," + String(USSensorDistance) + "," + String(leftRPM) + "," + String(rightRPM) + "," + String((leftRPM + rightRPM)/2) + "," ;
+    client.println(messageOut);
   }
   
   // --- Motor Control ---
@@ -152,11 +152,13 @@ void loop() {
       RPMDesired = speedStop;
       pid();
     }
+  
+  serialPlotter(V, VPrevious, leftRPM, rightRPM, DistanceDesired, E);
+
   }
   // Calibrating wheel speed
   // serialPlotter(leftV, leftVPrevious, leftRPM, leftRPMDesired, leftE);
   // Speed
-  serialPlotter(V, VPrevious, leftRPM, rightRPM, RPMDesired, E);
   // Distance
   //serialPlotter(rightV, rightVPrevious, USSensorDistance, rightDistanceDesired, rightE, leftV, leftVPrevious, USSensorDistance, leftDistanceDesired, leftE);
   

@@ -56,7 +56,12 @@ const int RIGHT_MOTOR_DIR_1 = 11;       // Right motor direction pin 2
 float USTimeElapsed = 0, MessageTimeElapsed = 0;        // Accumulates elapsed time for periodic tasks
 float t, tPrevious=0, dt;
 float USSensorDuration, USSensorDistance, USSensorDistancePrevious = 0;     // Duration of ultrasonic pulse and calculated distance
-String message;
+
+// --- Commands to and from the laptop ---
+String messageOut;
+String dataIn;
+String RPMString;
+String DistanceString;
 
 // Encoder/PID variables
 int leftEncoderCount = 0;
