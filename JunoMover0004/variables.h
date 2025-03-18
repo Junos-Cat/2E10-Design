@@ -18,8 +18,9 @@ const int US_ECHO = 12;       // Ultrasonic sensor echo pin
 
 // --- Speed and Control Parameters ---
 const int speed0 = 0;
-int speedDesired = 140;       // Base speed for forward motion
-const int speed2 = 140;       // Base speed for turning (adjustable)
+int speedDesired2 = 0;       // Base speed for forward motion
+const int speed1 = 90;
+const int speed2 = 170;       // Base speed for turning (adjustable)
 const int speed3 = 0;         // Speed for stop
 int distanceDesired = 20;
 const float innerTurnFactorSpeed = 0.8;
