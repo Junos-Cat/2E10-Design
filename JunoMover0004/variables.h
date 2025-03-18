@@ -45,6 +45,8 @@ int rightDeltaTheta;
 float t, tPrevious=0, dt;
 float duration, distance, distancePrevious = 0;     // Duration of ultrasonic pulse and calculated distance
 String message;
+String data; // for command recieved
+String splitData[8];
 
 // Encoder/pid variables
 volatile int leftEncoderCount = 0;
