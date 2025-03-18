@@ -182,7 +182,7 @@ void loop() {
       leftDistanceDesired = 0;
       rightDistanceDesired = 0;
     }
-    serialPlotter(leftRPM, leftRPMDesired);
+    serialPlotter(leftV, leftRPM, leftRPMDesired);
   }
   
   
