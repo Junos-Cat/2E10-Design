@@ -4,6 +4,7 @@
 #include "pid.h"
 #include "variables.h"
 #include "encoderInterrupt.h"
+#include "pidCalibrationPrinting.h"
 
 void setup() {
   delay(1000);
