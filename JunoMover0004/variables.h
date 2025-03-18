@@ -51,7 +51,7 @@ int rightThetaPrevious = 0;
 int leftDeltaTheta;
 int rightDeltaTheta;
 
-float Vmax = 6;
+float Vmax = 7.2;
 float Vmin = 0; // if we are able to reverse, we can't accuratley measure RPM
 float leftV = 0;
 float rightV = 0;
@@ -71,12 +71,15 @@ float rightDiff;
 
 float leftRPM;
 float leftRPMPrevious = 0;
+float currentLeftRPM;
 float leftRPMDesired;
 float leftDistanceDesired = 15;
 float leftVDesired;
 float leftRPMMax;
+
 float rightRPM;
 float rightRPMPrevious = 0;
+float currentRightRPM;
 float rightRPMDesired;
 float rightDistanceDesired = 15;
 float rightVDesired;
@@ -94,7 +97,7 @@ int mode = 1;
 // plot the delta degrees (multiply by a factor if you need to make it more visable) 
 // and if the steps in degree size corresponds to the steps in measured RPM, then
 // the hypothesis is correct
-const float kp = 0.01;// we can't just set this to as inte is also dependant on e
+const float kp = 0.001;// we can't just set this to as inte is also dependant on e
 const float ki = 0;
 const float kd = 0;
 

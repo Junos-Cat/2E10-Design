@@ -13,14 +13,18 @@ void serialPlotter(double voltageVal, double measuredVal, double desiredVal){
 
   Serial.print(",");
   Serial.print("leftV:");
-  Serial.print(voltageVal*100);
+  Serial.print(voltageVal*25);
 
   Serial.print(",");
-  Serial.print("max:");
-  Serial.print(-5);
+  Serial.print("leftE:");
+  Serial.print(leftE);
+
   Serial.print(",");
   Serial.print("min:");
-  Serial.print(500);
+  Serial.print(-5);
+  Serial.print(",");
+  Serial.print("max:");
+  Serial.print(300);
 
   Serial.println();
 }

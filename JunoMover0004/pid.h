@@ -14,7 +14,7 @@ void pid(int sideMotor, int speed){
     pidDesiredTCounter-=10000;
     if (change){
       change = false;
-      leftRPMDesired = 170;
+      leftRPMDesired = 150;
     }
     else{
       change = true;
@@ -46,6 +46,10 @@ void pid(int sideMotor, int speed){
   leftV = leftVPrevious + (kp * leftE + ki * leftInte + kd * leftDiff);
   rightV = rightVPrevious + (kp * rightE + ki * rightInte + kd * rightDiff);
 
+  // Update voltages
+  leftVPrevious = leftV;
+  rightVPrevious = rightV;
+
   // Prevention of antiwinder
   if (leftV > Vmax) {
     leftV = Vmax;
@@ -64,4 +68,6 @@ void pid(int sideMotor, int speed){
     rightInte = rightIntePrevious;
   }
 
+  left_motor_move(leftV, Vmax);
+  right_motor_move(rightV, Vmax);
 }

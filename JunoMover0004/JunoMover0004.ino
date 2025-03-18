@@ -79,8 +79,15 @@ void loop() {
   averageTravelDistance = (leftTravelDistance + rightTravelDistance)*0.5;
 
   // Speed calculation
-  leftRPM = leftDeltaTheta/(dt)*dpr;
-  rightRPM = rightDeltaTheta/(dt)*dpr;
+  currentLeftRPM = leftDeltaTheta/(dt)*dpr;
+  currentRightRPM = rightDeltaTheta/(dt)*dpr;
+
+  // Running average
+  // leftRPM = (currentLeftRPM + leftRPMPrevious)*half;
+  // rightRPM = (currentRightRPM + rightRPMPrevious)*half;
+
+  leftRPM = currentLeftRPM;
+  rightRPM = currentRightRPM;
 
   // Check incoming HTTP request
   WiFiClient client = server.available();
@@ -134,8 +141,8 @@ void loop() {
   leftThetaPrevious = leftTheta;
   rightThetaPrevious = rightTheta;
   USSensorDistancePrevious = USSensorDistance;
-  leftVPrevious = leftV;
-  rightVPrevious = rightV;
+  leftRPMPrevious = leftRPM;
+  rightRPMPrevious = rightRPM;
   // if (DELAY > 0) {
   //   delay(20);
   //   analogWrite(LEFT_MOTOR_EN, 0);
