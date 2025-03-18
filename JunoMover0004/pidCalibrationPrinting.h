@@ -4,7 +4,7 @@
 
 void serialPlotter(double voltageVal, double voltageValPrevious, double measuredVal, double desiredVal, double error, double voltageVal2, double voltageValPrevious2, double measuredVal2, double desiredVal2, double error2){
   Serial.print(",");
-  Serial.print("leftV:");
+  Serial.print("rightV:");
   Serial.print(voltageVal*25);
 
   // Serial.print(",");
@@ -12,11 +12,11 @@ void serialPlotter(double voltageVal, double voltageValPrevious, double measured
   // Serial.print(voltageValPrevious*25);
 
   Serial.print(",");
-  Serial.print("leftRPM:");
+  Serial.print("rightDistance:");
   Serial.print(measuredVal);
 
   Serial.print(",");
-  Serial.print("leftRPMDesired:");
+  Serial.print("rightDistanceDesired:");
   Serial.print(desiredVal);
 
   // Serial.print(",");
@@ -25,7 +25,7 @@ void serialPlotter(double voltageVal, double voltageValPrevious, double measured
 
   
   Serial.print(",");
-  Serial.print("rightV:");
+  Serial.print("leftV:");
   Serial.print(voltageVal2*25);
 
   // Serial.print(",");
@@ -33,11 +33,11 @@ void serialPlotter(double voltageVal, double voltageValPrevious, double measured
   // Serial.print(voltageValPrevious2*25);
 
   Serial.print(",");
-  Serial.print("rightRPM:");
+  Serial.print("leftDistance:");
   Serial.print(measuredVal2);
 
   Serial.print(",");
-  Serial.print("rightRPMDesired:");
+  Serial.print("leftDistanceDesired:");
   Serial.print(desiredVal2);
 
   // Serial.print(",");

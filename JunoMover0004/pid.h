@@ -30,8 +30,8 @@ void pid(){
     rightE = rightRPMDesired - rightRPM;
   }
   else if (mode == 2){
-    leftE = leftDistanceDesired - USSensorDistance;
-    rightE = rightDistanceDesired - USSensorDistance;
+    leftE = USSensorDistance - leftDistanceDesired;
+    rightE = USSensorDistance - rightDistanceDesired;
   }
 
   // Integration
@@ -43,8 +43,14 @@ void pid(){
   rightDiff = (rightE - rightEPrevious) / dt;
 
   // Voltage
-  leftV = leftVPrevious + (kpLeft * leftE + kiLeft * leftInte + kdLeft * leftDiff);
-  rightV = rightVPrevious + (kpRight * rightE + kiRight * rightInte + kdRight * rightDiff);
+  if (mode == 1){
+    leftV = leftVPrevious + (kpLeftSpeed * leftE + kiLeftSpeed * leftInte + kdLeftSpeed * leftDiff);
+    rightV = rightVPrevious + (kpRightSpeed * rightE + kiRightSpeed * rightInte + kdRightSpeed * rightDiff);
+  }
+  else if (mode == 2){
+    leftV = leftVPrevious + (kpLeftDistance * leftE + kiLeftDistance * leftInte + kdLeftDistance * leftDiff);
+    rightV = rightVPrevious + (kpRightDistance * rightE + kiRightDistance * rightInte + kdRightDistance * rightDiff);
+  }
 
   // Prevention of antiwinder
   if (leftV > Vmax) {

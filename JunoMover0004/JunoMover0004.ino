@@ -81,14 +81,20 @@ void loop() {
   // Speed calculation
   currentLeftRPM = leftDeltaTheta/(dt)*dpr;
   currentRightRPM = rightDeltaTheta/(dt)*dpr;
-
-  // Running average
-  leftRPM = (currentLeftRPM + leftRPMPrevious)*half;
-  rightRPM = (currentRightRPM + rightRPMPrevious)*half;
-
-  // No average
-  // leftRPM = currentLeftRPM;
-  // rightRPM = currentRightRPM;
+  
+  // This is to increase the responsiveness of the motors
+  if (leftRPMPrevious > leftRPMDesired * half){// Running average
+    leftRPM = (currentLeftRPM + leftRPMPrevious)*half;
+  }
+  else{// No average
+    leftRPM = currentLeftRPM;
+  }
+  if (rightRPMPrevious > rightRPMDesired * half){// Running average
+    rightRPM = (currentRightRPM + rightRPMPrevious)*half;
+  }
+  else{// No average
+    rightRPM = currentRightRPM;
+  }
 
   // Check incoming HTTP request
   WiFiClient client = server.available();
@@ -117,18 +123,36 @@ void loop() {
     // Decide movement based on sensor input
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
       // Forward
-      leftRPMDesired = speedForward * leftF;
-      rightRPMDesired = speedForward * rightF;
+      if (mode == 1){
+        leftRPMDesired = speedForward * leftF;
+        rightRPMDesired = speedForward * rightF;
+      }
+      else if (mode == 2){
+        leftDistanceDesired = distanceForward * leftF;
+        rightDistanceDesired = distanceForward * rightF;
+      }
       pid();
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
       // Turn Left
-      leftRPMDesired = speedInner * leftF;
-      rightRPMDesired = speedOuter * rightF;
+      if (mode == 1){
+        leftRPMDesired = speedInner * leftF;
+        rightRPMDesired = speedOuter * rightF;
+      }
+      else if (mode == 2){
+        leftDistanceDesired = distanceInner * leftF;
+        rightDistanceDesired = distanceOuter * rightF;
+      }
       pid();
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
       // Turn Right
-      leftRPMDesired = speedOuter * leftF;
-      rightRPMDesired = speedInner * rightF;
+      if (mode == 1){
+        leftRPMDesired = speedOuter * leftF;
+        rightRPMDesired = speedInner * rightF;
+      }
+      else if (mode == 2){
+        leftDistanceDesired = distanceOuter * leftF;
+        rightDistanceDesired = distanceInner * rightF;
+      }
       pid();
     } else {
       // If no sensor condition is met, stop the motors
@@ -139,7 +163,7 @@ void loop() {
   }
   // Calibrating wheel speed
   // serialPlotter(leftV, leftVPrevious, leftRPM, leftRPMDesired, leftE);
-  serialPlotter(rightV, rightVPrevious, rightRPM, rightRPMDesired, rightE, leftV, leftVPrevious, leftRPM, leftRPMDesired, leftE);
+  serialPlotter(rightV, rightVPrevious, USSensorDistance, rightDistanceDesired, rightE, leftV, leftVPrevious, USSensorDistance, leftDistanceDesired, leftE);
   
   // Update time for next loop iteration
   tPrevious = t;
@@ -148,13 +172,4 @@ void loop() {
   USSensorDistancePrevious = USSensorDistance;
   leftRPMPrevious = leftRPM;
   rightRPMPrevious = rightRPM;
-  // if (DELAY > 0) {
-  //   delay(20);
-  //   analogWrite(LEFT_MOTOR_EN, 0);
-  //   analogWrite(RIGHT_MOTOR_EN, 0);
-  //   delay(DELAY);
-  // }
 }
-
-
-

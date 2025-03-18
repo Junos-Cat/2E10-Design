@@ -16,21 +16,26 @@ const int US_TRIG = 13;       // Ultrasonic sensor trigger pin
 const int US_ECHO = 12;       // Ultrasonic sensor echo pin
 
 // --- Speed and Control Parameters ---
-// const int speedForward = 60;       // Base speed for forward motion (loaded)
-// const int speedOuter = 70;       // Base speed for turning (adjustable) (loaded)
-// const int speedInner = 0;         // Speed for stop (loaded)
+// Loaded
+// const int speedForward = 50;
+// const int speedOuter = 60;
+// const int speedInner = 20;
 // const int speedStop = 0;
 
-const int speedForward = 90;       // Base speed for forward motion (unloaded)
-const int speedOuter = 140;       // Base speed for turning (adjustable) (unloaded)
-const int speedInner = 0;         // Speed for stop (unloaded)
+// Unloaded (for calibration)
+const int speedForward = 70;
+const int speedOuter = 110;
+const int speedInner = 0;
 const int speedStop = 0;
+
+// Unloaded
+const int distanceForward = 15;
+const int distanceOuter = 16;
+const int distanceInner = 14;
+const int distanceStop = 0;
 
 const float leftF = 1;     // Correction factor for left motor
 const float rightF = 1;       // Correction factor for right motor
-float x = 0;                  // Variable for incremental adjustments (e.g., turning)
-float y = 0;
-int DELAY = 0;                // Delay used in movement control
 bool USStop = false;          // Flag to stop when an obstacle is detected by the ultrasonic sensor
 
 // --- Motor Control Pin Definitions ---
@@ -79,7 +84,7 @@ float rightDiff;
 float leftRPM;
 float leftRPMPrevious = 0;
 float currentLeftRPM;
-float leftRPMDesired;
+float leftRPMDesired = 0;
 float leftDistanceDesired = 15;
 float leftVDesired;
 float leftRPMMax;
@@ -87,7 +92,7 @@ float leftRPMMax;
 float rightRPM;
 float rightRPMPrevious = 0;
 float currentRightRPM;
-float rightRPMDesired;
+float rightRPMDesired = 0;
 float rightDistanceDesired = 15;
 float rightVDesired;
 float rightRPMMax;
@@ -97,20 +102,28 @@ bool change = true;
 
 const float damper = 0;
 
-int mode = 1;
+int mode = 2;
 
 ///////////////////////////https://www.youtube.com/watch?v=uXnDwojRb1g
 // To check if the steps really are present due to the steps in encoder values,
 // plot the delta degrees (multiply by a factor if you need to make it more visable) 
 // and if the steps in degree size corresponds to the steps in measured RPM, then
 // the hypothesis is correct
-const float kpLeft = 0.007;
-const float kiLeft = 0;
-const float kdLeft = 0.01;
+const float kpLeftSpeed = 0.01;
+const float kiLeftSpeed = 0;
+const float kdLeftSpeed = 0;//3;
 
-const float kpRight = 0.007;
-const float kiRight = 0;
-const float kdRight = 0.01;
+const float kpRightSpeed = 0.01;
+const float kiRightSpeed = 0;
+const float kdRightSpeed = 0;//4;
+
+const float kpLeftDistance = 0.01;
+const float kiLeftDistance = 0;
+const float kdLeftDistance = 0;//3;
+
+const float kpRightDistance = 0.01;
+const float kiRightDistance = 0;
+const float kdRightDistance = 0;//4;
 
 const float dpr = 166.6666666;
 const float half = 0.5;
