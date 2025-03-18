@@ -57,6 +57,8 @@ void setup() {
   delay(3000);  // Delay to allow the system to stabilize
   Serial.println("Starting loop");
   interupt = true;
+  delay(5000);
+  runBuggy=true;
 }
 
 void loop() {
@@ -108,10 +110,10 @@ void loop() {
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
       x += 0.1;
       pid(LEFT_MOTOR_EN, speed3 * leftF);
-      pid(RIGHT_MOTOR_EN, (speed2 + x) * rightF);
+      pid(RIGHT_MOTOR_EN, (speed2) * rightF);
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
       y += 0.1;
-      pid(LEFT_MOTOR_EN, (speed2 + y) * leftF);
+      pid(LEFT_MOTOR_EN, (speed2) * leftF);
       pid(RIGHT_MOTOR_EN, speed3 * rightF);
     } else {
       // If no sensor condition is met, stop the motors

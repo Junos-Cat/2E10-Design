@@ -16,10 +16,10 @@ const int US_TRIG = 13;       // Ultrasonic sensor trigger pin
 const int US_ECHO = 12;       // Ultrasonic sensor echo pin
 
 // --- Speed and Control Parameters ---
-const int speed1 = 140;       // Base speed for forward motion
-const int speed2 = 140;       // Base speed for turning (adjustable)
+const int speed1 = 90;       // Base speed for forward motion
+const int speed2 = 170;       // Base speed for turning (adjustable)
 const int speed3 = 0;         // Speed for stop
-const float leftF = 1.15;     // Correction factor for left motor
+const float leftF = 1;     // Correction factor for left motor
 const float rightF = 1;       // Correction factor for right motor
 float x = 0;                  // Variable for incremental adjustments (e.g., turning)
 float y = 0;
