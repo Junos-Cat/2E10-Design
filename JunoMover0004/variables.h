@@ -96,9 +96,9 @@ int chance = 0;
 // the hypothesis is correct
 
 // PID calibration coefficients
-double kpLeftSpeed = 1;
+double kpLeftSpeed = 0.9;
 double kiLeftSpeed = 0;
-double kdLeftSpeed = 0;
+double kdLeftSpeed = 0.005;
 
 double kpRightSpeed = 0;
 double kiRightSpeed = 0;

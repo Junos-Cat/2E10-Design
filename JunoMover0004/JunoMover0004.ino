@@ -91,7 +91,7 @@ void loop() {
   
 
   // leftRPM = map(leftDeltaTheta/(dt)*dpr, 0, 255, 0, 255);
-  // rightRPM = map(rightDeltaTheta/(dt)*dpr, 0, 255, 0, 255);
+  //rightRPM = map(rightDeltaTheta/(dt)*dpr, 0, 255, 0, 255);
   leftRPM = leftDeltaTheta/(dt)*dpr;
   rightRPM = rightDeltaTheta/(dt)*dpr;
   // currentLeftRPM = map(leftDeltaTheta/(dt)*dpr, 0, 500, 0, 255);
@@ -182,17 +182,17 @@ void loop() {
       leftDistanceDesired = 0;
       rightDistanceDesired = 0;
     }
-    serialPlotter(leftV, leftRPM, leftRPMDesired);
+    
   }
-  
+  serialPlotter(leftV, leftRPM, leftRPMDesired);
   
   // Update time for next loop iteration
   tPrevious = t;
   leftThetaPrevious = leftTheta;
   rightThetaPrevious = rightTheta;
   usSensorDistancePrevious = usSensorDistance;
-  leftVPrevious = leftV;
-  rightVPrevious = rightV;
+  // leftVPrevious = leftV;
+  // rightVPrevious = rightV;
   // if (DELAY > 0) {
   //   delay(20);
   //   analogWrite(LEFT_MOTOR_EN, 0);
