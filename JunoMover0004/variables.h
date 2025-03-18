@@ -37,7 +37,7 @@ const int RIGHT_MOTOR_DIR_1 = 11;       // Right motor direction pin 2
 // --- Timing and Ultrasonic Sensor Variables ---
 float USTimeElapsed = 0, MessageTimeElapsed = 0;        // Accumulates elapsed time for periodic tasks
 float t, tPrevious=0, dt;
-float duration, distance, distancePrevious = 0;     // Duration of ultrasonic pulse and calculated distance
+float USSensorDuration, USSensorDistance, USSensorDistancePrevious = 0;     // Duration of ultrasonic pulse and calculated distance
 String message;
 
 // Encoder/PID variables
@@ -62,19 +62,23 @@ float leftE;
 float leftEPrevious = 0;
 float leftInte;
 float leftIntePrevious = 0;
+float leftDiff;
 float rightE;
 float rightEPrevious = 0;
 float rightInte;
 float rightIntePrevious = 0;
+float rightDiff;
 
 float leftRPM;
 float leftRPMPrevious = 0;
 float leftRPMDesired;
+float leftDistanceDesired = 15;
 float leftVDesired;
 float leftRPMMax;
 float rightRPM;
 float rightRPMPrevious = 0;
 float rightRPMDesired;
+float rightDistanceDesired = 15;
 float rightVDesired;
 float rightRPMMax;
 
@@ -82,6 +86,8 @@ float pidDesiredTCounter = 0;
 bool change = true;
 
 const float damper = 0;
+
+int mode = 1;
 
 ///////////////////////////https://www.youtube.com/watch?v=uXnDwojRb1g
 // To check if the steps really are present due to the steps in encoder values,

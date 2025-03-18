@@ -56,6 +56,8 @@ void setup() {
 
   delay(3000);  // Delay to allow the system to stabilize
   Serial.println("Starting loop");
+  delay(1000);
+  runBuggy = true;
 }
 
 void loop() {
@@ -64,14 +66,20 @@ void loop() {
   USTimeElapsed += dt;
   MessageTimeElapsed += dt;
 
+  // Angle calculation
   leftTheta = leftEncoderCount * 45;
   rightTheta = rightEncoderCount * 45;
   leftDeltaTheta = leftTheta - leftThetaPrevious;
   rightDeltaTheta = rightTheta - rightThetaPrevious;
 
+  // Distance calculation
   leftTravelDistance += leftDeltaTheta * distancePerTheta;
   rightTravelDistance += rightDeltaTheta * distancePerTheta;
   averageTravelDistance = (leftTravelDistance + rightTravelDistance)*0.5;
+
+  // Speed calculation
+  leftRPM = leftDeltaTheta/(dt)*dpr;
+  rightRPM = rightDeltaTheta/(dt)*dpr;
 
   // Check incoming HTTP request
   WiFiClient client = server.available();
@@ -86,7 +94,7 @@ void loop() {
   if (MessageTimeElapsed > 500){
     MessageTimeElapsed = 0;
     // Send data to the laptop client
-    message = String(leftEncoderCount) + "," + String(distance) + "," ;
+    message = String(leftEncoderCount) + "," + String(USSensorDistance) + "," ;
     client.println(message);
   }
   
@@ -123,7 +131,7 @@ void loop() {
   tPrevious = t;
   leftThetaPrevious = leftTheta;
   rightThetaPrevious = rightTheta;
-  distancePrevious = distance;
+  USSensorDistancePrevious = USSensorDistance;
   leftVPrevious = leftV;
   rightVPrevious = rightV;
   // if (DELAY > 0) {

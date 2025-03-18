@@ -24,24 +24,27 @@ void pid(int sideMotor, int speed){
   // We're currently tuning the left wheel so we don't need this
   rightVDesired = 0;
 
-  leftDeltaTheta = leftTheta - leftThetaPrevious;
-  rightDeltaTheta = rightTheta - rightThetaPrevious;
+  // Error
+  if (mode == 1){
+    leftE = leftRPMDesired - leftRPM;
+    rightE = rightRPMDesired - rightRPM;
+  }
+  else if (mode == 2){
+    leftE = leftDistanceDesired - USSensorDistance;
+    rightE = rightDistanceDesired - USSensorDistance;
+  }
 
-  leftRPM = leftDeltaTheta/(dt)*dpr;
-
-  rightRPM = rightDeltaTheta/(dt)*dpr;
-
-  // Calculation of error, integration value, 
-  // and voltage to be supplied to a motor
-  leftE = leftRPMDesired - leftRPM;
+  // Integration
   leftInte = leftIntePrevious + (dt * (leftE + leftEPrevious) * half);
-
-  leftV = leftVPrevious + (kp * leftE + ki * leftInte + (kd * (leftE - leftEPrevious))*1000 / dt);
-
-  rightE = rightRPMDesired - rightRPM;
   rightInte = rightIntePrevious + (dt * (rightE + rightEPrevious) * half);
 
-  rightV = rightVPrevious + (kp * rightE + ki * rightInte + (kd * (rightE - rightEPrevious))*1000 / dt);
+  // Differenciation
+  leftDiff = (leftE - leftEPrevious) / dt;
+  rightDiff = (rightE - rightEPrevious) / dt;
+
+  // Voltage
+  leftV = leftVPrevious + (kp * leftE + ki * leftInte + kd * leftDiff);
+  rightV = rightVPrevious + (kp * rightE + ki * rightInte + kd * rightDiff);
 
   // Prevention of antiwinder
   if (leftV > Vmax) {
