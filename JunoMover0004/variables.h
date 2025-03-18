@@ -17,11 +17,17 @@ const int US_TRIG = 13;       // Ultrasonic sensor trigger pin
 const int US_ECHO = 12;       // Ultrasonic sensor echo pin
 
 // --- Speed and Control Parameters ---
+const float leftFactorSpeed = 1;
+const float rightFactorSpeed = 1;
+
 const int speed0 = 0;
-int speedDesired2 = 0;       // Base speed for forward motion
+int speedDesired0 = 0;
+int speedDesired1 = 250;       // Outer wheel speed (forward)
+int speedDesired2 = 90;      // Inner wheel speed
 const int speed1 = 90;
 const int speed2 = 170;       // Base speed for turning (adjustable)
-const int speed3 = 0;         // Speed for stop
+
+
 int distanceDesired = 20;
 const float innerTurnFactorSpeed = 0.8;
 const float outerTurnFactorSpeed = 1.2;
@@ -81,6 +87,7 @@ double rightDistanceDesired;
 // PID step function
 float pidDesiredTCounter = 0;
 bool change = true;
+int chance = 0;
 
 ///////////////////////////https://www.youtube.com/watch?v=uXnDwojRb1g
 // To check if the steps really are present due to the steps in encoder values,
@@ -89,7 +96,7 @@ bool change = true;
 // the hypothesis is correct
 
 // PID calibration coefficients
-double kpLeftSpeed = 0.5;
+double kpLeftSpeed = 10;
 double kiLeftSpeed = 0;
 double kdLeftSpeed = 0;
 

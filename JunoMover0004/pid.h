@@ -22,12 +22,19 @@ void pidSpeedMode(){
     if (change){
       pidDesiredTCounter-=10000;
       change = false;
-      speedDesired = random(60, 200);
+      if (chance == 1){
+        chance = 2;
+        leftRPMDesired = speedDesired1;
+      }
+      else {
+        chance = 1;
+        leftRPMDesired = speedDesired2;
+      }
     }
     else{
       pidDesiredTCounter-=5000;
       change = true;
-      speedDesired = 0;
+      leftRPMDesired = 0;
     }
   }
   // We're currently tuning the left wheel so we don't need this

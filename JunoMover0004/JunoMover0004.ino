@@ -65,6 +65,8 @@ void setup() {
 
   delay(3000);  // Delay to allow the system to stabilize
   Serial.println("Starting loop");
+  delay(1000);
+  runBuggy = true;
 }
 
 void loop() {
@@ -86,8 +88,16 @@ void loop() {
   rightDeltaTheta = rightTheta - rightThetaPrevious;
 
   // Calculate the RPM of each wheel
-  leftRPM = map(leftDeltaTheta/(dt)*dpr, 0, 200, 0, 255);
-  rightRPM = map(rightDeltaTheta/(dt)*dpr, 0, 200, 0, 255);
+  
+
+  // leftRPM = map(leftDeltaTheta/(dt)*dpr, 0, 255, 0, 255);
+  // rightRPM = map(rightDeltaTheta/(dt)*dpr, 0, 255, 0, 255);
+  leftRPM = leftDeltaTheta/(dt)*dpr;
+  rightRPM = rightDeltaTheta/(dt)*dpr;
+  // currentLeftRPM = map(leftDeltaTheta/(dt)*dpr, 0, 500, 0, 255);
+  // currentRightRPM = map(rightDeltaTheta/(dt)*dpr, 0, 500, 0, 255);
+  // leftRPM = runningAveLeft();
+  // rightRPM = runningAveRight();
 
   // Calculate the speed of each wheel
   leftSpeed = leftRPM * distancePerTheta * 360;
@@ -130,8 +140,8 @@ void loop() {
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
       // Move forward
       if (mode == 1){// Speed mode
-        leftRPMDesired = speedDesired;
-        rightRPMDesired = speedDesired;
+        // leftRPMDesired = speedDesired1;
+        // rightRPMDesired = speedDesired1;
         pidSpeedMode();
       }
       else{// Distance mode
@@ -142,8 +152,8 @@ void loop() {
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
       // Turn right
       if (mode == 1){// Speed mode
-        leftRPMDesired = speedDesired * innerTurnFactorSpeed;
-        rightRPMDesired = speedDesired * outerTurnFactorSpeed;
+        leftRPMDesired = speedDesired2 * leftFactorSpeed;
+        rightRPMDesired = speedDesired1 * rightFactorSpeed;
         pidSpeedMode();
       }
       else{// Distance mode
@@ -154,8 +164,8 @@ void loop() {
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
       // Turn left
       if (mode == 1){// Speed mode
-        leftRPMDesired = speedDesired * innerTurnFactorSpeed;
-        rightRPMDesired = speedDesired * outerTurnFactorSpeed;
+        leftRPMDesired = speedDesired1 * leftFactorSpeed;
+        rightRPMDesired = speedDesired2 * rightFactorSpeed;
         pidSpeedMode();
       }
       else{// Distance mode
@@ -167,6 +177,10 @@ void loop() {
       // If no sensor condition is met, stop the motors
       analogWrite(LEFT_MOTOR_EN, speed0);
       analogWrite(RIGHT_MOTOR_EN, speed0);
+      leftRPMDesired = 0;
+      rightRPMDesired = 0;
+      leftDistanceDesired = 0;
+      rightDistanceDesired = 0;
     }
     serialPlotter(leftRPM, leftRPMDesired);
   }
