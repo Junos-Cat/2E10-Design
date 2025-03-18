@@ -2,21 +2,29 @@ import processing.net.*;
 import controlP5.*;
 
 String COMMAND = "";
+String refSpeedString;
+String refSpeedString1;
+String desiredDistanceString;
+String desiredDistanceString1;
+String desiredDistanceString2;
+String desiredSpeedString;
+String desiredSpeedString1;
+String desiredSpeedString2;
 
 
-
+int Sensor_x_baseline = 500;
+int Sensor_y_baseline = 500;
 
 Client myClient;
 String data;
 String buggyIP = "192.168.4.1";
 // STOP and GO command
 // set speed ("V") or set distance ("D")
-// set ref speed
 // set distance
 // set speed
 // end line
 // nothing
-String[] command = {"X","S","V","0","0","0","E"};
+String[] command = {"X","S","V","000","000","E"};
 
 float travelDist, objectDist;
 float speedLeft, speedRight, avgSpeed;
@@ -51,7 +59,7 @@ void setup() {
   createNewElements();
 }
 
-void draw() {
+void draw() { 
   background(primaryColor);
   
   // US Sensor Distance section moved further to the right
@@ -74,21 +82,21 @@ void draw() {
 void drawUSDistanceSection() {
   // Draw background box for US sensor distance, shifted right by 50 px
   fill(boxColor);
-  rect(750, 100, 200, 40);
+  rect(Sensor_x_baseline - 10, Sensor_y_baseline, 200, 40);
   fill(#ecf0f1);
   textSize(16);
-  text("US Sensor Distance", 760, 90);
+  text("US Sensor Distance", Sensor_x_baseline, Sensor_y_baseline - 10);
   
   // Draw the bar representing the sensor reading
   float maxDist = 100;
   float barWidth = map(objectDist, 0, maxDist, 0, 180);
   fill(successColor);
-  rect(760, 110, barWidth, 20);
+  //rect(760, 110, barWidth, 20);
   
   // Display the distance text
   fill(#ecf0f1);
   textSize(20);
-  text(nf(objectDist, 1, 2) + " cm", 760, 130);
+  text(nf(objectDist, 1, 2) + " cm", Sensor_x_baseline, Sensor_y_baseline + 30);
 }
 
 void drawDesiredDistanceBox() {
@@ -125,6 +133,8 @@ void displayConnectionStatus() {
   // Optionally update connection status here (currently shown in header)
 }
 
+//_____________________________     Stop and go buttons     _________________
+
 void createDashboardElements() {
   cp5.addButton("STOP")
     .setPosition(500, 300)
@@ -144,25 +154,9 @@ void createDashboardElements() {
     
     
     
-  
-  cp5.addTextlabel("refSpeedTitle")
-    .setText("Set Reference Speed")
-    .setPosition(100, 100)
-    .setColorValue(#ecf0f1);
     
-  cp5.addTextfield("refSpeedInput")
-    .setPosition(100, 130)
-    .setSize(150, 30)
-    .setColorValue(#2c3e50)
-    .setColorBackground(#ecf0f1)
-    .setAutoClear(false);
-    
-  cp5.addButton("setRefSpeed")
-    .setPosition(260, 130)
-    .setSize(80, 30)
-    .setLabel("SET")
-    .setColorBackground(secondaryColor)
-    .setColorActive(#2980b9);
+    //{{{{{{{{{{{{{{{{{{{{{{{{     Log tables      }}}}}}}}}}}}}}}}}}}}}}}}}}
+ 
     
     
     
@@ -183,7 +177,7 @@ void createDashboardElements() {
     .setText("System started...\n");
 }
 
-
+//PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP    Distance   PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
 
 void createNewElements() {
   // Desired Distance UI Elements
@@ -211,7 +205,7 @@ void createNewElements() {
      .setColorActive(#2980b9)
      .setFont(createFont("Arial", 16));
      
-     
+//++++++++++++++++++++++++++++++++++++++++++    Speed    +++++++++++++++++++++++++++++++++
      
   // Desired Speed UI Elements
   cp5.addToggle("SpeedMode")
@@ -239,8 +233,8 @@ void createNewElements() {
      .setFont(createFont("Arial", 16));
 }
 
-
-
+//??????????????????????????????????????????????????  More buttons  ????????????????????????????????????????????
+ 
 void controlEvent(ControlEvent e) {
   if (e.isFrom("DistanceMode")) {
     if (cp5.get(Toggle.class, "DistanceMode").getState()) {
@@ -251,7 +245,7 @@ void controlEvent(ControlEvent e) {
       cp5.get(Button.class, "setDesiredSpeed").setColorBackground(secondaryColor);
       isDistanceMode = true;
       isSpeedMode = false;
-      command[2] = "V";
+      command[2] = "D";
     } else {
       cp5.get(Toggle.class, "DistanceMode").setColorBackground(dangerColor);
       cp5.get(Button.class, "setDesiredDistance").setColorBackground(secondaryColor);
@@ -266,7 +260,7 @@ void controlEvent(ControlEvent e) {
       cp5.get(Button.class, "setDesiredDistance").setColorBackground(secondaryColor);
       isSpeedMode = true;
       isDistanceMode = false;
-      command[2] = "D";
+      command[2] = "V";
     } else {
       cp5.get(Toggle.class, "SpeedMode").setColorBackground(dangerColor);
       cp5.get(Button.class, "setDesiredSpeed").setColorBackground(secondaryColor);
@@ -274,10 +268,11 @@ void controlEvent(ControlEvent e) {
     }
   }
 }
-
+//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  Data in  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 void updateSensorData() {
   if (myClient.available() > 0) {
     data = myClient.readString();
+    println(data);
     if (data != null) {
       String[] splitData = split(data, ',');
       if (splitData.length >= 7) {
@@ -286,8 +281,8 @@ void updateSensorData() {
           objectDist   = float(splitData[1]);
           speedLeft    = float(splitData[2]);
           speedRight   = float(splitData[3]);
-          voltageLeft  = float(splitData[4]);
-          voltageRight = float(splitData[5]);
+          avgSpeed     = float(splitData[4]);
+          //voltageRight = float(splitData[5]);
           String buggyMsg = splitData[6];
           logArea.append("Buggy Message: " + buggyMsg + "\n");
           logArea.scroll(1);
@@ -298,7 +293,7 @@ void updateSensorData() {
     }
   }
 }
-
+//------------------------------------------------  Buttons  ----------------------------------------------------
 void STOP() {
   command[1] = "S";
   sendCommand();
@@ -311,34 +306,47 @@ void GO() {
   modeLabel.setText("Current Mode: MOVE FORWARD").setColorValue(successColor);
 }
 
-void setRefSpeed() {
-  try {
-    refSpeed = float(cp5.get(Textfield.class, "refSpeedInput").getText());
-    command[3] = str(refSpeed);
-    sendCommand();
-    logArea.append("Reference Speed set to: " + refSpeed + " cm/s\n");
-  } catch (Exception e) {
-    println("Invalid speed value!");
-  }
-}
-
 void setDesiredDistance() {
   try {
-    float desiredDistance = float(cp5.get(Textfield.class, "desiredDistanceInput").getText());
-    command[4] = str(desiredDistance);
+    float desiredDistance = int(cp5.get(Textfield.class, "desiredDistanceInput").getText());
+    desiredDistanceString = str(desiredDistance);
+    if (desiredDistanceString.length() == 3){
+      desiredDistanceString1 = "00" + desiredDistanceString;
+    }
+    else if (desiredDistanceString.length() == 4){
+      desiredDistanceString1 = "0" + desiredDistanceString;
+    }
+    else{
+      desiredDistanceString1 = desiredDistanceString;
+    }
+    desiredDistanceString2 = desiredDistanceString1.substring(0,3);
+    command[3] = desiredDistanceString2;
     sendCommand();
-    logArea.append("Desired Distance set to: " + desiredDistance + " cm\n");
+    logArea.append("Desired Distance set to: " + desiredDistanceString2 + " cm\n");
   } catch (Exception e) {
-    println("Invalid distance value!");
+    println("Invalid distance value!"); 
   }
 }
 
 void setDesiredSpeed() {
   try {
-    float desiredSpeed = float(cp5.get(Textfield.class, "desiredSpeedInput").getText());
-    command[5] = str(desiredSpeed);
+    float desiredSpeed = int(cp5.get(Textfield.class, "desiredSpeedInput").getText());
+    desiredSpeedString = str(desiredSpeed);
+    if (desiredSpeedString.length() == 3){
+      desiredSpeedString1 = "00";
+      desiredSpeedString1 += desiredSpeedString;
+    }
+    else if (desiredSpeedString.length() == 4){
+      desiredSpeedString1 = "0";
+      desiredSpeedString1 += desiredSpeedString;
+    }
+    else {
+      desiredSpeedString1 = desiredSpeedString;
+    }
+    desiredSpeedString2 = desiredSpeedString1.substring(0,3);
+    command[4] = desiredSpeedString2;
     sendCommand();
-    logArea.append("Desired Speed set to: " + desiredSpeed + " cm/s\n");
+    logArea.append("Desired Speed set to: " + desiredSpeedString2 + " cm/s\n");
   } catch (Exception e) {
     println("Invalid speed value!");
   }
@@ -346,6 +354,7 @@ void setDesiredSpeed() {
 
 void sendCommand() {
   if (myClient.active()) {
+    COMMAND = "";
     for (int i = 0 ; i < command.length ; i++){
       COMMAND += command[i];
     }
