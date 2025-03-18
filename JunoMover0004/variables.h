@@ -47,6 +47,7 @@ float duration, distance, distancePrevious = 0;     // Duration of ultrasonic pu
 String message;
 String data; // for command recieved
 String splitData[8];
+String cString;
 
 // Encoder/pid variables
 volatile int leftEncoderCount = 0;

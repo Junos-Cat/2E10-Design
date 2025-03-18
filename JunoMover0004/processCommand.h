@@ -9,28 +9,31 @@ void processCommand(WiFiClient &client) {
     char c = client.read();
     Serial.print(c);
     data += c;
-    if (c == 'E'){
+    if (data[data.length()-1] == 'X'){
       // wipe data
       data = "";
     }
-    if (c == 'X'){
-      // disect data
-      splitData = split(data, ",");
-      if (splitData[1] == "D"){
-        //desiredDistance = float(splitData[4])
-      }
-      else if (splitData[1] == "V"){
-        //desiredRPM = float(splitData[3])
-      }
-      if (splitData[0] == 'G'){
+    if (data[data.length()-1] == 'E'){
+      Serial.println("We're here");
+      if (data[0] == 'G'){
         runBuggy=true;
       }
       else{
         runBuggy=false;
       }
+      // disect data
+      // splitData = split(data, ",");
+      if (data[1] == 'D'){
+        //desiredDistance = float(splitData[4])
+      }
+      else if (data[1] == 'V'){
+        //desiredRPM = float(splitData[3])
+      }
+      
       Serial.print("Data obtained: ");
       Serial.println(data);
     }
+
     Serial.println("");
     Serial.print("Command: ");
     Serial.println(data);
