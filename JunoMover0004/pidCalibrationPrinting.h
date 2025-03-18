@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include "variables.h"
 
-void serialPlotter(double measuredVal, double desiredVal){
+void serialPlotter(double voltageVal, double measuredVal, double desiredVal){
   Serial.print(",");
   Serial.print("leftRPM:");
   Serial.print(measuredVal);
@@ -13,7 +13,7 @@ void serialPlotter(double measuredVal, double desiredVal){
 
   Serial.print(",");
   Serial.print("leftV:");
-  Serial.print(leftV*100);
+  Serial.print(voltageVal*100);
 
   Serial.print(",");
   Serial.print("max:");

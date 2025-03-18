@@ -126,6 +126,7 @@ void loop() {
       pid(LEFT_MOTOR_EN, 0);
       pid(RIGHT_MOTOR_EN, 0);
     }
+    serialPlotter(leftV, leftRPM, leftRPMDesired);
   }
   
   // Update time for next loop iteration
