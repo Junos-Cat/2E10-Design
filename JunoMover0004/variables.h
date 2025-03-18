@@ -97,21 +97,13 @@ int mode = 2;
 // plot the delta degrees (multiply by a factor if you need to make it more visable) 
 // and if the steps in degree size corresponds to the steps in measured RPM, then
 // the hypothesis is correct
-const float kpLeftSpeed = 0.01;
-const float kiLeftSpeed = 0;
-const float kdLeftSpeed = 0;//3;
+const float kpSpeed = 0.01;
+const float kiSpeed = 0;
+const float kdSpeed = 0;//3;
 
-const float kpRightSpeed = 0.01;
-const float kiRightSpeed = 0;
-const float kdRightSpeed = 0;//4;
-
-const float kpLeftDistance = 0.01;
-const float kiLeftDistance = 0;
-const float kdLeftDistance = 0;//3;
-
-const float kpRightDistance = 0.01;
-const float kiRightDistance = 0;
-const float kdRightDistance = 0;//4;
+const float kpDistance = 0.01;
+const float kiDistance = 0;
+const float kdDistance = 0;//3;
 
 const float dpr = 166.6666666;
 const float half = 0.5;

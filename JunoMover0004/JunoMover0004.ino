@@ -83,13 +83,13 @@ void loop() {
   currentRightRPM = rightDeltaTheta/(dt)*dpr;
   
   // This is to increase the responsiveness of the motors
-  if (leftRPMPrevious > leftRPMDesired * half){// Running average
+  if (leftRPMPrevious > RPMDesired * half){// Running average
     leftRPM = (currentLeftRPM + leftRPMPrevious)*half;
   }
   else{// No average
     leftRPM = currentLeftRPM;
   }
-  if (rightRPMPrevious > rightRPMDesired * half){// Running average
+  if (rightRPMPrevious > RPMDesired * half){// Running average
     rightRPM = (currentRightRPM + rightRPMPrevious)*half;
   }
   else{// No average
@@ -156,7 +156,7 @@ void loop() {
   // Calibrating wheel speed
   // serialPlotter(leftV, leftVPrevious, leftRPM, leftRPMDesired, leftE);
   // Speed
-  serialPlotter(rightV, rightVPrevious, rightRPM, rightRPMDesired, rightE, leftV, leftVPrevious, leftRPM, leftRPMDesired, leftE);
+  serialPlotter(V, VPrevious, rightRPM, RPMDesired, E, leftRPM);
   // Distance
   //serialPlotter(rightV, rightVPrevious, USSensorDistance, rightDistanceDesired, rightE, leftV, leftVPrevious, USSensorDistance, leftDistanceDesired, leftE);
   
