@@ -14,6 +14,7 @@ String desiredSpeedString2;
 
 int Sensor_x_baseline = 500;
 int Sensor_y_baseline = 500;
+int Sensor_y_spacing = 80;
 
 Client myClient;
 String data;
@@ -61,11 +62,13 @@ void setup() {
 
 void draw() { 
   background(primaryColor);
-  
-  // US Sensor Distance section moved further to the right
+  updateSensorData();
+  // Draw Sensors
   drawUSDistanceSection();
+  drawDistanceTravelledSection();
+
   
-  // Desired Distance and Desired Speed sections remain (with increased vertical spacing)
+  // Desired Distance and Desired Speed sections remain (with increased vertical Sensor_y_spacing)
   drawDesiredDistanceBox();
   drawDesiredSpeedBox();
   
@@ -75,10 +78,12 @@ void draw() {
   text("System Log", 30, 430);
   
   drawHeader();
-  updateSensorData();
+  
   displayConnectionStatus();
 }
 
+
+//******************************************     sensor boxes       ****************************
 void drawUSDistanceSection() {
   // Draw background box for US sensor distance, shifted right by 50 px
   fill(boxColor);
@@ -98,6 +103,30 @@ void drawUSDistanceSection() {
   textSize(20);
   text(nf(objectDist, 1, 2) + " cm", Sensor_x_baseline, Sensor_y_baseline + 30);
 }
+
+void drawDistanceTravelledSection() {
+  // Draw background box for US sensor distance, shifted right by 50 px
+  fill(boxColor);
+  rect(Sensor_x_baseline - 10, Sensor_y_baseline + Sensor_y_spacing, 200, 40);
+  fill(#ecf0f1);
+  textSize(16);
+  text("Distance Travelled", Sensor_x_baseline, Sensor_y_baseline - 10 + Sensor_y_spacing);
+  
+  //println(travelDist);
+  
+  // Draw the bar representing the sensor reading
+  float maxDist = 100;
+  float barWidth = map(travelDist, 0, maxDist, 0, 180);
+  fill(successColor);
+  //rect(760, 110, barWidth, 20);
+  
+  // Display the distance text
+  fill(#ecf0f1);
+  textSize(20);
+  text(nf(objectDist, 1, 2) + " cm", Sensor_x_baseline, Sensor_y_baseline + 30 + Sensor_y_spacing);
+}
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<,     draw input boxes        >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
 
 void drawDesiredDistanceBox() {
   fill(boxColor);
@@ -272,20 +301,23 @@ void controlEvent(ControlEvent e) {
 void updateSensorData() {
   if (myClient.available() > 0) {
     data = myClient.readString();
-    println(data);
+    //println(data);
     if (data != null) {
       String[] splitData = split(data, ',');
       if (splitData.length >= 7) {
         try {
-          travelDist   = float(splitData[0]);
-          objectDist   = float(splitData[1]);
-          speedLeft    = float(splitData[2]);
-          speedRight   = float(splitData[3]);
-          avgSpeed     = float(splitData[4]);
-          //voltageRight = float(splitData[5]);
+          if (splitData[0] == "T"){///////////////////////////////IDK IF THIS IS WHERE IM GOING WRONG
+            println(data);
+          travelDist   = float(splitData[1]);
+          objectDist   = float(splitData[2]);
+          speedLeft    = float(splitData[3]);
+          speedRight   = float(splitData[4]);
+          avgSpeed     = float(splitData[5]);
+          //voltageRight = float(splitData[6]);
           String buggyMsg = splitData[6];
           logArea.append("Buggy Message: " + buggyMsg + "\n");
           logArea.scroll(1);
+          }
         } catch (NumberFormatException e) {
           println("Error reading sensor data: " + e.getMessage());
         }
@@ -324,7 +356,7 @@ void setDesiredDistance() {
     sendCommand();
     logArea.append("Desired Distance set to: " + desiredDistanceString2 + " cm\n");
   } catch (Exception e) {
-    println("Invalid distance value!"); 
+    println("Invalid distance value!");
   }
 }
 

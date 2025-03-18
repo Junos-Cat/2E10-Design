@@ -1,6 +1,19 @@
 #pragma once
 #include <Arduino.h>
 #include "variables.h"
+// #include "Arduino_LED_Matrix.h"
+// ArduinoLEDMatrix matrix0;
+// matrix0.begin();
+// byte frame[8][12]={
+//   { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//   { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//   { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//   { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+//   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+// }
 
 // --- Process Incoming Commands ---
 void processCommand(WiFiClient &client) {
@@ -17,6 +30,7 @@ void processCommand(WiFiClient &client) {
       // Serial.println("We're here");
       if (dataIn[0] == 'G'){
         runBuggy=true;
+        //matrix.renderBitmap(frame, 8, 12);
       }
       else{
         runBuggy=false;

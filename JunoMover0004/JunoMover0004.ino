@@ -112,8 +112,8 @@ void loop() {
   if (MessageTimeElapsed > 500){
     MessageTimeElapsed = 0;
     // Send data to the laptop client
-    messageOut = String(averageTravelDistance) + "," + String(USSensorDistance) + "," + String(leftRPM) + "," + String(rightRPM) + "," + String((leftRPM + rightRPM)/2) + "," ;
-    client.println(messageOut);
+    messageOut = 'T' + "," + String(averageTravelDistance) + "," + String(USSensorDistance) + "," + String(leftRPM) + "," + String(rightRPM) + "," + String((leftRPM + rightRPM)/2) + "," ;
+    //client.println(messageOut);
   }
   
   // --- Motor Control ---
