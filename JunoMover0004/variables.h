@@ -98,7 +98,7 @@ int mode = 1;
 // plot the delta degrees (multiply by a factor if you need to make it more visable) 
 // and if the steps in degree size corresponds to the steps in measured RPM, then
 // the hypothesis is correct
-const float kpLeft = 0.01;
+const float kpLeft = 0.008;
 const float kiLeft = 0;
 const float kdLeft = 0;
 

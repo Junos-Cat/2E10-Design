@@ -28,7 +28,7 @@ void serialPlotter(double voltageVal, double measuredVal, double desiredVal){
   Serial.print(-5);
   Serial.print(",");
   Serial.print("max:");
-  Serial.print(150);
+  Serial.print(180);
 
   Serial.println();
 }
