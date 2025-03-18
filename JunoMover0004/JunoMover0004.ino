@@ -140,8 +140,8 @@ void loop() {
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
       // Move forward
       if (mode == 1){// Speed mode
-        // leftRPMDesired = speedDesired1;
-        // rightRPMDesired = speedDesired1;
+        // leftRPMDesired = speedDesiredForward;
+        // rightRPMDesired = speedDesiredForward;
         pidSpeedMode();
       }
       else{// Distance mode
@@ -152,8 +152,8 @@ void loop() {
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
       // Turn right
       if (mode == 1){// Speed mode
-        leftRPMDesired = speedDesired2 * leftFactorSpeed;
-        rightRPMDesired = speedDesired1 * rightFactorSpeed;
+        leftRPMDesired = speedDesiredOuter * leftFactorSpeed;
+        rightRPMDesired = speedDesiredInner * rightFactorSpeed;
         pidSpeedMode();
       }
       else{// Distance mode
@@ -164,8 +164,8 @@ void loop() {
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
       // Turn left
       if (mode == 1){// Speed mode
-        leftRPMDesired = speedDesired1 * leftFactorSpeed;
-        rightRPMDesired = speedDesired2 * rightFactorSpeed;
+        leftRPMDesired = speedDesiredInner * leftFactorSpeed;
+        rightRPMDesired = speedDesiredOuter * rightFactorSpeed;
         pidSpeedMode();
       }
       else{// Distance mode

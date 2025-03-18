@@ -21,9 +21,9 @@ const float leftFactorSpeed = 1;
 const float rightFactorSpeed = 1;
 
 const int speed0 = 0;
-int speedDesired0 = 0;
-int speedDesired1 = 250;       // Outer wheel speed (forward)
-int speedDesired2 = 90;      // Inner wheel speed
+int speedDesiredInner = 0;        // Inner wheel speed
+int speedDesiredForward = 90;       // Forward wheel speed
+int speedDesiredOuter = 170;      // Outer wheel speed
 const int speed1 = 90;
 const int speed2 = 170;       // Base speed for turning (adjustable)
 

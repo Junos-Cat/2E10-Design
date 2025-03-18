@@ -24,17 +24,17 @@ void pidSpeedMode(){
       change = false;
       if (chance == 1){
         chance = 2;
-        leftRPMDesired = speedDesired1;
+        leftRPMDesired = speedDesiredForward;
       }
       else {
         chance = 1;
-        leftRPMDesired = speedDesired2;
+        leftRPMDesired = speedDesiredOuter;
       }
     }
     else{
       pidDesiredTCounter-=5000;
       change = true;
-      leftRPMDesired = 0;
+      leftRPMDesired = speedDesiredInner;
     }
   }
   // We're currently tuning the left wheel so we don't need this
