@@ -36,12 +36,12 @@ void pid(int sideMotor, int speed){
   leftE = leftRPMDesired - leftRPM;
   leftInte = leftIntePrevious + (dt * (leftE + leftEPrevious) * half);
 
-  leftV = (kp * leftE + ki * leftInte + (kd * (leftE - leftEPrevious))*1000 / dt);
+  leftV = leftVPrevious + (kp * leftE + ki * leftInte + (kd * (leftE - leftEPrevious))*1000 / dt);
 
   rightE = rightRPMDesired - rightRPM;
   rightInte = rightIntePrevious + (dt * (rightE + rightEPrevious) * half);
 
-  rightV = (kp * rightE + ki * rightInte + (kd * (rightE - rightEPrevious))*1000 / dt);
+  rightV = rightVPrevious + (kp * rightE + ki * rightInte + (kd * (rightE - rightEPrevious))*1000 / dt);
 
   // Prevention of antiwinder
   if (leftV > Vmax) {
