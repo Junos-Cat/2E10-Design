@@ -28,12 +28,12 @@ void right_motor_move(float rightV, float Vmax){
     PWMValue = 255;
   }
   if (rightV > 0){
-    digitalWrite(RIGHT_MOTOR_DIR_1, HIGH);
-    digitalWrite(RIGHT_MOTOR_DIR_2, LOW);
-  }
-  else if (rightV < 0){
     digitalWrite(RIGHT_MOTOR_DIR_1, LOW);
     digitalWrite(RIGHT_MOTOR_DIR_2, HIGH);
+  }
+  else if (rightV < 0){
+    digitalWrite(RIGHT_MOTOR_DIR_1, HIGH);
+    digitalWrite(RIGHT_MOTOR_DIR_2, LOW);
   }
   else{
     digitalWrite(RIGHT_MOTOR_DIR_1, LOW);

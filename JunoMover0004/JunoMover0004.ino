@@ -83,11 +83,11 @@ void loop() {
   currentRightRPM = rightDeltaTheta/(dt)*dpr;
 
   // Running average
-  // leftRPM = (currentLeftRPM + leftRPMPrevious)*half;
-  // rightRPM = (currentRightRPM + rightRPMPrevious)*half;
+  leftRPM = (currentLeftRPM + leftRPMPrevious)*half;
+  rightRPM = (currentRightRPM + rightRPMPrevious)*half;
 
-  leftRPM = currentLeftRPM;
-  rightRPM = currentRightRPM;
+  // leftRPM = currentLeftRPM;
+  // rightRPM = currentRightRPM;
 
   // Check incoming HTTP request
   WiFiClient client = server.available();
@@ -109,32 +109,34 @@ void loop() {
   // --- Motor Control ---
   // Stop the motors if the robot is not running or if an obstacle is detected
   if (!runBuggy || USStop) {
-    pid(LEFT_MOTOR_EN, speed3);
-    pid(RIGHT_MOTOR_EN, speed3);
-    x = 0;
-    y = 0;
+    leftRPMDesired = speedStop * leftF;
+    rightRPMDesired = speedStop * rightF;
+    pid();
   } else {
     // Decide movement based on sensor input
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
-      pid(LEFT_MOTOR_EN, speed1 * leftF);
-      pid(RIGHT_MOTOR_EN, speed1 * rightF);
-      x = 0;
-      y = 0;
+      // Forward
+      leftRPMDesired = speedForward * leftF;
+      rightRPMDesired = speedForward * rightF;
+      pid();
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
-      x += 0.1;
-      pid(LEFT_MOTOR_EN, speed3 * leftF);
-      pid(RIGHT_MOTOR_EN, (speed2 + x) * rightF);
+      // Turn Left
+      leftRPMDesired = speedInner * leftF;
+      rightRPMDesired = speedOuter * rightF;
+      pid();
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
-      y += 0.1;
-      pid(LEFT_MOTOR_EN, (speed2 + y) * leftF);
-      pid(RIGHT_MOTOR_EN, speed3 * rightF);
+      // Turn Right
+      leftRPMDesired = speedOuter * leftF;
+      rightRPMDesired = speedInner * rightF;
+      pid();
     } else {
       // If no sensor condition is met, stop the motors
-      pid(LEFT_MOTOR_EN, 0);
-      pid(RIGHT_MOTOR_EN, 0);
+      leftRPMDesired = speedStop * leftF;
+      rightRPMDesired = speedStop * rightF;
+      pid();
     }
-    serialPlotter(leftV, leftRPM, leftRPMDesired);
   }
+  serialPlotter(leftV, leftRPM, leftRPMDesired);
   
   // Update time for next loop iteration
   tPrevious = t;
