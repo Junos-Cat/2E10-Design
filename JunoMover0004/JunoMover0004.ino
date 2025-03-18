@@ -125,31 +125,28 @@ void loop() {
     // Decide movement based on sensor input
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
       // Forward
-      if (mode == 1){
-        RPMDesired = speedForward;
-      }
-      else if (mode == 2){
-        DistanceDesired = distanceForward;
-      }
-      pid();
+      // if (mode == 1){
+      //   RPMDesired = speedForward;
+      // }
+      // else if (mode == 2){
+      //   DistanceDesired = distanceForward;
+      // }
+      // pid();
+      left_motor_move(vForward, Vmax);
+      right_motor_move(vForward, Vmax);
+      x=0;
+      y=0;
+
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
       // Turn Left
-      if (mode == 1){
-        RPMDesired = speedInner;
-      }
-      else if (mode == 2){
-        DistanceDesired = distanceInner;
-      }
-      pid();
+      x+=0.5;
+      left_motor_move(vInner, Vmax);
+      right_motor_move(vOuter + x, Vmax);
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
       // Turn Right
-      if (mode == 1){
-        RPMDesired = speedOuter;
-      }
-      else if (mode == 2){
-        DistanceDesired = distanceOuter;
-      }
-      pid();
+      y+=0.5;
+      left_motor_move(vOuter + y, Vmax);
+      right_motor_move(vInner, Vmax);
     } else {
       // If no sensor condition is met, stop the motors
       RPMDesired = speedStop;
@@ -159,7 +156,7 @@ void loop() {
   // Calibrating wheel speed
   // serialPlotter(leftV, leftVPrevious, leftRPM, leftRPMDesired, leftE);
   // Speed
-  serialPlotter(V, VPrevious, rightRPM, RPMDesired, E, leftRPM);
+  serialPlotter(V, VPrevious, leftRPM, rightRPM, RPMDesired, E);
   // Distance
   //serialPlotter(rightV, rightVPrevious, USSensorDistance, rightDistanceDesired, rightE, leftV, leftVPrevious, USSensorDistance, leftDistanceDesired, leftE);
   

@@ -16,6 +16,8 @@ const int US_TRIG = 13;       // Ultrasonic sensor trigger pin
 const int US_ECHO = 12;       // Ultrasonic sensor echo pin
 
 // --- Speed and Control Parameters ---
+float x = 0;
+float y = 0;
 // Loaded
 // const int speedForward = 50;
 // const int speedOuter = 60;
@@ -23,10 +25,14 @@ const int US_ECHO = 12;       // Ultrasonic sensor echo pin
 // const int speedStop = 0;
 
 // Unloaded (for calibration)
-const int speedForward = 70;
-const int speedOuter = 110;
+const int speedForward = 50;
+const int speedOuter = 90;
 const int speedInner = 0;
 const int speedStop = 0;
+
+const int vForward = 4.8; //min: 3.9 niceish: 4.3 max: 4.8
+const int vOuter = 4.8;
+const int vInner = 0;
 
 // Unloaded
 const int distanceForward = 15;
@@ -97,9 +103,9 @@ int mode = 1;
 // plot the delta degrees (multiply by a factor if you need to make it more visable) 
 // and if the steps in degree size corresponds to the steps in measured RPM, then
 // the hypothesis is correct
-const float kpSpeed = 0.005;
+const float kpSpeed = 0.007;
 const float kiSpeed = 0;
-const float kdSpeed = 0.01;//3;
+const float kdSpeed = 0;
 
 const float kpDistance = 0.01;
 const float kiDistance = 0;
