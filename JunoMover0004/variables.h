@@ -16,10 +16,16 @@ const int US_TRIG = 13;       // Ultrasonic sensor trigger pin
 const int US_ECHO = 12;       // Ultrasonic sensor echo pin
 
 // --- Speed and Control Parameters ---
-const int speedForward = 90;       // Base speed for forward motion
-const int speedOuter = 150;       // Base speed for turning (adjustable)
-const int speedInner = 0;         // Speed for stop
+// const int speedForward = 60;       // Base speed for forward motion (loaded)
+// const int speedOuter = 70;       // Base speed for turning (adjustable) (loaded)
+// const int speedInner = 0;         // Speed for stop (loaded)
+// const int speedStop = 0;
+
+const int speedForward = 90;       // Base speed for forward motion (unloaded)
+const int speedOuter = 140;       // Base speed for turning (adjustable) (unloaded)
+const int speedInner = 0;         // Speed for stop (unloaded)
 const int speedStop = 0;
+
 const float leftF = 1;     // Correction factor for left motor
 const float rightF = 1;       // Correction factor for right motor
 float x = 0;                  // Variable for incremental adjustments (e.g., turning)
@@ -98,13 +104,13 @@ int mode = 1;
 // plot the delta degrees (multiply by a factor if you need to make it more visable) 
 // and if the steps in degree size corresponds to the steps in measured RPM, then
 // the hypothesis is correct
-const float kpLeft = 0.008;
+const float kpLeft = 0.007;
 const float kiLeft = 0;
-const float kdLeft = 0;
+const float kdLeft = 0.01;
 
-const float kpRight = 0.01;
+const float kpRight = 0.007;
 const float kiRight = 0;
-const float kdRight = 0;
+const float kdRight = 0.01;
 
 const float dpr = 166.6666666;
 const float half = 0.5;

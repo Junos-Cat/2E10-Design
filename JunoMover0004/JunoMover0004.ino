@@ -86,6 +86,7 @@ void loop() {
   leftRPM = (currentLeftRPM + leftRPMPrevious)*half;
   rightRPM = (currentRightRPM + rightRPMPrevious)*half;
 
+  // No average
   // leftRPM = currentLeftRPM;
   // rightRPM = currentRightRPM;
 
@@ -136,7 +137,9 @@ void loop() {
       pid();
     }
   }
-  serialPlotter(leftV, leftRPM, leftRPMDesired);
+  // Calibrating wheel speed
+  // serialPlotter(leftV, leftVPrevious, leftRPM, leftRPMDesired, leftE);
+  serialPlotter(rightV, rightVPrevious, rightRPM, rightRPMDesired, rightE, leftV, leftVPrevious, leftRPM, leftRPMDesired, leftE);
   
   // Update time for next loop iteration
   tPrevious = t;
