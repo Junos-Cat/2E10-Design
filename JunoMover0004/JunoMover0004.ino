@@ -191,6 +191,8 @@ void loop() {
   leftThetaPrevious = leftTheta;
   rightThetaPrevious = rightTheta;
   usSensorDistancePrevious = usSensorDistance;
+  leftVPrevious = leftV;
+  rightVPrevious = rightV;
   // if (DELAY > 0) {
   //   delay(20);
   //   analogWrite(LEFT_MOTOR_EN, 0);

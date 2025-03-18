@@ -12,6 +12,10 @@ void serialPlotter(double measuredVal, double desiredVal){
   Serial.print(desiredVal);
 
   Serial.print(",");
+  Serial.print("leftV:");
+  Serial.print(leftV*100);
+
+  Serial.print(",");
   Serial.print("max:");
   Serial.print(-5);
   Serial.print(",");
