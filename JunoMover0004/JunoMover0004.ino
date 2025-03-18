@@ -4,6 +4,7 @@
 #include "pid.h"
 #include "variables.h"
 #include "encoderInterrupt.h"
+#include "pidCalibrationPrinting.h"
 
 void setup() {
   delay(1000);
@@ -56,9 +57,8 @@ void setup() {
 
   delay(3000);  // Delay to allow the system to stabilize
   Serial.println("Starting loop");
-  interupt = true;
-  delay(5000);
-  runBuggy=true;
+  delay(1000);
+  runBuggy = true;
 }
 
 void loop() {
@@ -67,14 +67,34 @@ void loop() {
   USTimeElapsed += dt;
   MessageTimeElapsed += dt;
 
+  // Angle calculation
   leftTheta = leftEncoderCount * 45;
   rightTheta = rightEncoderCount * 45;
   leftDeltaTheta = leftTheta - leftThetaPrevious;
   rightDeltaTheta = rightTheta - rightThetaPrevious;
 
+  // Distance calculation
   leftTravelDistance += leftDeltaTheta * distancePerTheta;
   rightTravelDistance += rightDeltaTheta * distancePerTheta;
   averageTravelDistance = (leftTravelDistance + rightTravelDistance)*0.5;
+
+  // Speed calculation
+  currentLeftRPM = leftDeltaTheta/(dt)*dpr;
+  currentRightRPM = rightDeltaTheta/(dt)*dpr;
+  
+  // This is to increase the responsiveness of the motors
+  if (leftRPMPrevious > leftRPMDesired * half){// Running average
+    leftRPM = (currentLeftRPM + leftRPMPrevious)*half;
+  }
+  else{// No average
+    leftRPM = currentLeftRPM;
+  }
+  if (rightRPMPrevious > rightRPMDesired * half){// Running average
+    rightRPM = (currentRightRPM + rightRPMPrevious)*half;
+  }
+  else{// No average
+    rightRPM = currentRightRPM;
+  }
 
   // Check incoming HTTP request
   WiFiClient client = server.available();
@@ -89,54 +109,62 @@ void loop() {
   if (MessageTimeElapsed > 500){
     MessageTimeElapsed = 0;
     // Send data to the laptop client
-    message = String(leftEncoderCount) + "," + String(distance) + "," ;
+    message = String(leftEncoderCount) + "," + String(USSensorDistance) + "," ;
     client.println(message);
   }
   
   // --- Motor Control ---
   // Stop the motors if the robot is not running or if an obstacle is detected
   if (!runBuggy || USStop) {
-    pid(LEFT_MOTOR_EN, speed3);
-    pid(RIGHT_MOTOR_EN, speed3);
-    x = 0;
-    y = 0;
+    RPMDesired = speedStop;
+    pid();
   } else {
     // Decide movement based on sensor input
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
       // Forward
-      pid(LEFT_MOTOR_EN, speed1 * leftF);
-      pid(RIGHT_MOTOR_EN, speed1 * rightF);
-      x = 0;
-      y = 0;
+      if (mode == 1){
+        RPMDesired = speedForward;
+      }
+      else if (mode == 2){
+        DistanceDesired = distanceForward;
+      }
+      pid();
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
-      x += 0.1;
-      // Turn left
-      pid(LEFT_MOTOR_EN, speed3 * leftF);
-      pid(RIGHT_MOTOR_EN, (speed2) * rightF);
+      // Turn Left
+      if (mode == 1){
+        RPMDesired = speedInner;
+      }
+      else if (mode == 2){
+        DistanceDesired = distanceInner;
+      }
+      pid();
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
-      y += 0.1;
-      // Turn right
-      pid(LEFT_MOTOR_EN, (speed2) * leftF);
-      pid(RIGHT_MOTOR_EN, speed3 * rightF);
+      // Turn Right
+      if (mode == 1){
+        RPMDesired = speedOuter;
+      }
+      else if (mode == 2){
+        DistanceDesired = distanceOuter;
+      }
+      pid();
     } else {
       // If no sensor condition is met, stop the motors
-      pid(LEFT_MOTOR_EN, 0);
-      pid(RIGHT_MOTOR_EN, 0);
+      RPMDesired = speedStop;
+      pid();
     }
   }
+  // Calibrating wheel speed
+  // serialPlotter(leftV, leftVPrevious, leftRPM, leftRPMDesired, leftE);
+  // Speed
+  serialPlotter(rightV, rightVPrevious, rightRPM, rightRPMDesired, rightE, leftV, leftVPrevious, leftRPM, leftRPMDesired, leftE);
+  // Distance
+  //serialPlotter(rightV, rightVPrevious, USSensorDistance, rightDistanceDesired, rightE, leftV, leftVPrevious, USSensorDistance, leftDistanceDesired, leftE);
   
   // Update time for next loop iteration
   tPrevious = t;
   leftThetaPrevious = leftTheta;
   rightThetaPrevious = rightTheta;
-  distancePrevious = distance;
-  // if (DELAY > 0) {
-  //   delay(20);
-  //   analogWrite(LEFT_MOTOR_EN, 0);
-  //   analogWrite(RIGHT_MOTOR_EN, 0);
-  //   delay(DELAY);
-  // }
+  USSensorDistancePrevious = USSensorDistance;
+  leftRPMPrevious = leftRPM;
+  rightRPMPrevious = rightRPM;
 }
-
-
-

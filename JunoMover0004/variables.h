@@ -16,14 +16,26 @@ const int US_TRIG = 13;       // Ultrasonic sensor trigger pin
 const int US_ECHO = 12;       // Ultrasonic sensor echo pin
 
 // --- Speed and Control Parameters ---
-const int speed1 = 90;       // Base speed for forward motion
-const int speed2 = 170;       // Base speed for turning (adjustable)
-const int speed3 = 0;         // Speed for stop
+// Loaded
+// const int speedForward = 50;
+// const int speedOuter = 60;
+// const int speedInner = 20;
+// const int speedStop = 0;
+
+// Unloaded (for calibration)
+const int speedForward = 70;
+const int speedOuter = 110;
+const int speedInner = 0;
+const int speedStop = 0;
+
+// Unloaded
+const int distanceForward = 15;
+const int distanceOuter = 16;
+const int distanceInner = 14;
+const int distanceStop = 0;
+
 const float leftF = 1;     // Correction factor for left motor
 const float rightF = 1;       // Correction factor for right motor
-float x = 0;                  // Variable for incremental adjustments (e.g., turning)
-float y = 0;
-int DELAY = 0;                // Delay used in movement control
 bool USStop = false;          // Flag to stop when an obstacle is detected by the ultrasonic sensor
 
 // --- Motor Control Pin Definitions ---
@@ -36,20 +48,73 @@ const int RIGHT_MOTOR_DIR_1 = 11;       // Right motor direction pin 2
 
 // --- Timing and Ultrasonic Sensor Variables ---
 float USTimeElapsed = 0, MessageTimeElapsed = 0;        // Accumulates elapsed time for periodic tasks
+float t, tPrevious=0, dt;
+float USSensorDuration, USSensorDistance, USSensorDistancePrevious = 0;     // Duration of ultrasonic pulse and calculated distance
+String message;
+
+// Encoder/PID variables
+int leftEncoderCount = 0;
+int rightEncoderCount = 0;
+
 int leftTheta = 0;
 int rightTheta = 0;
 int leftThetaPrevious = 0;
 int rightThetaPrevious = 0;
 int leftDeltaTheta;
 int rightDeltaTheta;
-float t, tPrevious=0, dt;
-float duration, distance, distancePrevious = 0;     // Duration of ultrasonic pulse and calculated distance
-String message;
 
-// Encoder/pid variables
-volatile int leftEncoderCount = 0;
-volatile int rightEncoderCount = 0;
-bool interupt = false;
+float Vmax = 7.2;
+float Vmin = 0; // if we are able to reverse, we can't accuratley measure RPM
+float V = 0;
+float VPrevious;
+
+float E;
+float EPrevious = 0;
+float Inte;
+float IntePrevious = 0;
+float Diff;
+
+float leftRPM;
+float leftRPMPrevious = 0;
+float currentLeftRPM;
+
+float rightRPM;
+float rightRPMPrevious = 0;
+float currentRightRPM;
+
+float RPMDesired = 0;
+float DistanceDesired = 15;
+
+float pidDesiredTCounter = 0;
+bool change = true;
+
+const float damper = 0;
+
+int mode = 2;
+
+///////////////////////////https://www.youtube.com/watch?v=uXnDwojRb1g
+// To check if the steps really are present due to the steps in encoder values,
+// plot the delta degrees (multiply by a factor if you need to make it more visable) 
+// and if the steps in degree size corresponds to the steps in measured RPM, then
+// the hypothesis is correct
+const float kpLeftSpeed = 0.01;
+const float kiLeftSpeed = 0;
+const float kdLeftSpeed = 0;//3;
+
+const float kpRightSpeed = 0.01;
+const float kiRightSpeed = 0;
+const float kdRightSpeed = 0;//4;
+
+const float kpLeftDistance = 0.01;
+const float kiLeftDistance = 0;
+const float kdLeftDistance = 0;//3;
+
+const float kpRightDistance = 0.01;
+const float kiRightDistance = 0;
+const float kdRightDistance = 0;//4;
+
+const float dpr = 166.6666666;
+const float half = 0.5;
 
 // Encoder sensor pins
 const int LEFT_ENCODER = 2;
