@@ -163,7 +163,7 @@ void drawDistanceTravelledSection() {
   // Display the distance text
   fill(#ecf0f1);
   textSize(20);
-  text(nf(objectDist, 1, 2) + " cm", Sensor_x_baseline, Sensor_y_baseline + 30 + Sensor_y_spacing);
+  text(nf(travelDist, 1, 2) + " cm", Sensor_x_baseline, Sensor_y_baseline + 30 + Sensor_y_spacing);
 }
 
 
