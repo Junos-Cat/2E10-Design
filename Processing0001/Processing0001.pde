@@ -418,12 +418,12 @@ void updateSensorData() {
     if (data != null) {
       String[] splitData = split(data, ',');
       if (splitData.length >= 6) {
-        println(splitData[0]);
-        print("sub");
-        print(data.substring(0,1));
-        println("end");
+        //println(splitData[0]);
+        //print("sub");
+        //print(data.substring(0,1));
+        //println("end");
         try {
-          if (data.substring(0,1) == "T"){///////////////////////////////IDK IF THIS IS WHERE IM GOING WRONG
+          //if (data.substring(0,1) == "T"){///////////////////////////////IDK IF THIS IS WHERE IM GOING WRONG
             println(splitData);
           travelDist   = float(splitData[1]);
           objectDist   = float(splitData[2]);
@@ -434,7 +434,7 @@ void updateSensorData() {
           //String buggyMsg = splitData[6];
           //logArea.append("Buggy Message: " + buggyMsg + "\n");
           //logArea.scroll(1);
-          }
+          //}
         } catch (NumberFormatException e) {
           println("Error reading sensor data: " + e.getMessage());
         }
