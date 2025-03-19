@@ -339,13 +339,14 @@ void createNewElements() {
      .setLabel("") // Remove label text
      .setFont(createFont("Arial", 16));
      
-  cp5.addTextfield("  ")
+  cp5.addTextfield("desiredDistanceInput")
      .setPosition(Input_x_baseline + 50 + 10, Input_y_baseline + 25)
      .setSize(130, 40)
      .setColorValue(#2c3e50)
      .setColorBackground(#ecf0f1)
      .setAutoClear(false)
-     .setFont(createFont("Arial", 16));
+     .setFont(createFont("Arial", 16))
+     .setLabel(""); // Hide the label
      
   cp5.addButton("setDesiredDistance")
      .setPosition(Input_x_baseline + 190 + 10, Input_y_baseline + 25)
@@ -366,13 +367,14 @@ void createNewElements() {
      .setLabel("") // Remove label text
      .setFont(createFont("Arial", 16));
      
-  cp5.addTextfield("")
+  cp5.addTextfield("desiredSpeedInput")
      .setPosition(Input_x_baseline + 50 + 10, Input_y_baseline + Input_y_spacing + 25)
      .setSize(130, 40)
      .setColorValue(#2c3e50)
      .setColorBackground(#ecf0f1)
      .setAutoClear(false)
-     .setFont(createFont("Arial", 16));
+     .setFont(createFont("Arial", 16))
+     .setLabel(""); // Hide the label
      
   cp5.addButton("setDesiredSpeed")
      .setPosition(Input_x_baseline + 190 + 10, Input_y_baseline + Input_y_spacing + 25)
@@ -422,7 +424,7 @@ void controlEvent(ControlEvent e) {
 void updateSensorData() {
   if (myClient.available() > 0) {
     data = myClient.readString();
-    println(data);
+    //println(data);
     if (data != null) {
       String[] splitData = split(data, ',');
       if (splitData.length >= 6) {
@@ -488,7 +490,10 @@ void setDesiredDistance() {
 void setDesiredSpeed() {
   try {
     float desiredSpeed = int(cp5.get(Textfield.class, "desiredSpeedInput").getText());
+    println(desiredSpeed);
     desiredSpeedString = str(desiredSpeed);
+    println(desiredSpeedString);
+    
     if (desiredSpeedString.length() == 3){
       desiredSpeedString1 = "00";
       desiredSpeedString1 += desiredSpeedString;
@@ -500,7 +505,10 @@ void setDesiredSpeed() {
     else {
       desiredSpeedString1 = desiredSpeedString;
     }
+    
     desiredSpeedString2 = desiredSpeedString1.substring(0,3);
+    println(desiredSpeedString2);
+  
     command[4] = desiredSpeedString2;
     sendCommand();
     logArea.append("Desired Speed set to: " + desiredSpeedString2 + " cm/s\n");

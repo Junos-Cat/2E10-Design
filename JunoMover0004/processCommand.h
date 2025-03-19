@@ -41,6 +41,7 @@ void processCommand(WiFiClient &client) {
         DistanceString += dataIn[3];
         DistanceString += dataIn[4];
         DistanceDesired = DistanceString.toInt();
+        Serial.println();
         Serial.println(DistanceString);
         DistanceString = "";
       }
@@ -49,6 +50,7 @@ void processCommand(WiFiClient &client) {
         RPMString += dataIn[6];
         RPMString += dataIn[7];
         RPMDesired = RPMString.toInt();
+        Serial.println();
         Serial.println(RPMString);
         RPMString = "";
       }
