@@ -15,12 +15,12 @@ void detectUSSensorObject(){
   if (USSensorDuration > 0) {
     // Convert duration to distance in cm
     USSensorDistance = USSensorDuration / 58.0;
-    if (USSensorDistance <= 0) { // If an obstacle is too close (10 cm threshold)
-      USStop = true;
-    } else { // No obstacle
-      USStop = false;
-    }
+    // if (USSensorDistance <= 0) { // If an obstacle is too close (10 cm threshold)
+    //   USStop = true;
+    // } else { // No obstacle
+    //   USStop = false;
+    // }
   } else {
-    USStop = false;
+    // USStop = false;
   }
 }

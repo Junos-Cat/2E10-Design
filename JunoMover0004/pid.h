@@ -34,6 +34,9 @@ void pid(){
   }
   else if (mode == 2){
     V = VPrevious + (kpDistance * E + kiDistance * Inte + kdDistance * Diff);
+    if (V>4.5){
+      V = 4.5;
+    }
   }
 
   // Prevention of antiwinder
@@ -54,7 +57,7 @@ void pid(){
   right_motor_move(V, Vmax);
   }
   else if (mode == 2){
-    left_motor_move(V, Vmax);
-  right_motor_move(V, Vmax);
+    left_motor_move(V * leftFDistance, Vmax);
+    right_motor_move(V * rightFDistance, Vmax);
   }
 }

@@ -106,9 +106,11 @@ void loop() {
   // --- Ultrasonic Sensor Reading ---
   // If the robot is running, check the ultrasonic sensor every 500ms
   if (USTimeElapsed > 500) {
+    USTimeElapsed = 0;
     detectUSSensorObject();
   }
-
+  // detectUSSensorObject();
+  
   if (MessageTimeElapsed > 500){
     MessageTimeElapsed = 0;
     // Send data to the laptop client
@@ -125,15 +127,17 @@ void loop() {
   else if (mode == 2){
     
     E = USSensorDistance - DistanceDesired;
-    if (USSensorDistance > 90){
-      left_motor_move(0, Vmax);
-      right_motor_move(0, Vmax);
-    }
-    if (E < 0){
-      float kpDistance = 0.005;
+    // if (USSensorDistance > 90){
+    //   E = RPMDesired - (leftRPM + rightRPM)/2;
+    // }
+    if (E > 0){
+      kpDistance = 0.1;
     }
     else{
-      float kpDistance = 0.5;
+      kpDistance = 5;
+    }
+    if (E > 40){
+      E = 40;
     }
   }
   if (!runBuggy || USStop) {
@@ -158,11 +162,19 @@ void loop() {
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
       // Turn Left
       x+=0.3;
+      if (mode == 2){
+        left_motor_move(0, Vmax);
+        right_motor_move(0, Vmax);
+      }
       left_motor_move(vInner * leftF, Vmax);
       right_motor_move((vOuter + x) *rightF, Vmax);
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
       // Turn Right
       y+=0.3;
+      if (mode == 2){
+        left_motor_move(0, Vmax);
+        right_motor_move(0, Vmax);
+      }
       left_motor_move((vOuter + y) * leftF, Vmax);
       right_motor_move(vInner * rightF, Vmax);
     } else {

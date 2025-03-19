@@ -42,8 +42,8 @@ const int distanceStop = 0;
 
 const float leftF = 1;     // Correction factor for left motor
 const float rightF = 0.5;       // Correction factor for right motor
-const float leftFDistance = 0.5;     // Correction factor for left motor
-const float rightFDistance = 1;       // Correction factor for right motor
+const float leftFDistance = 1;     // Correction factor for left motor
+const float rightFDistance = 0.8;       // Correction factor for right motor
 bool USStop = false;          // Flag to stop when an obstacle is detected by the ultrasonic sensor
 
 // --- Motor Control Pin Definitions ---
@@ -114,7 +114,7 @@ const float kpSpeed = 0.003; // perfect
 const float kiSpeed = 0.00001;
 const float kdSpeed = 0.00006;
 
-float kpDistance = 0.005;
+float kpDistance;
 const float kiDistance = 0;
 const float kdDistance = 0;//-0.001;//3;
 
