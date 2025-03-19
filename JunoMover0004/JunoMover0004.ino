@@ -118,44 +118,67 @@ void loop() {
   
   // --- Motor Control ---
   // Stop the motors if the robot is not running or if an obstacle is detected
+  // Error
+  if (mode == 1){
+    E = RPMDesired - (leftRPM + rightRPM)/2;
+  }
+  else if (mode == 2){
+    
+    E = USSensorDistance - DistanceDesired;
+    if (USSensorDistance > 90){
+      left_motor_move(0, Vmax);
+      right_motor_move(0, Vmax);
+    }
+    if (E < 0){
+      float kpDistance = 0.005;
+    }
+    else{
+      float kpDistance = 0.5;
+    }
+  }
   if (!runBuggy || USStop) {
-    RPMDesired = speedStop;
-    pid();
+    left_motor_move(0, Vmax);
+    right_motor_move(0, Vmax);
   } else {
     // Decide movement based on sensor input
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
       //Forward
       // if (mode == 1){
-      //   RPMDesired = speedForward;
+      //   // RPMDesired = speedForward;
       // }
       // else if (mode == 2){
-      //   DistanceDesired = distanceForward;
+      //   // DistanceDesired = distanceForward;
       // }
-      // pid();
-      left_motor_move(vForward, Vmax);
-      right_motor_move(vForward, Vmax);
+      pid();
+      // left_motor_move(vForward, Vmax);
+      // right_motor_move(vForward, Vmax);
       x=0;
       y=0;
 
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
       // Turn Left
-      x+=0.5;
+      x+=0.3;
       left_motor_move(vInner * leftF, Vmax);
       right_motor_move((vOuter + x) *rightF, Vmax);
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
       // Turn Right
-      y+=0.5;
+      y+=0.3;
       left_motor_move((vOuter + y) * leftF, Vmax);
       right_motor_move(vInner * rightF, Vmax);
     } else {
       // If no sensor condition is met, stop the motors
-      RPMDesired = speedStop;
-      pid();
+      left_motor_move(0, Vmax);
+      right_motor_move(0, Vmax);
     }
-  
-  serialPlotter(V, VPrevious, leftRPM, rightRPM, DistanceDesired, E);
-
   }
+  if (mode == 1){
+    serialPlotter(V, VPrevious, leftRPM, rightRPM, RPMDesired, E);
+  }
+  else if (mode == 2){
+    serialPlotter(V, VPrevious, USSensorDistance, USSensorDistance, DistanceDesired, E);
+  }
+
+  
   // Calibrating wheel speed
   // serialPlotter(leftV, leftVPrevious, leftRPM, leftRPMDesired, leftE);
   // Speed

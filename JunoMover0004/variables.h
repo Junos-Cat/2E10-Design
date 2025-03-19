@@ -42,6 +42,8 @@ const int distanceStop = 0;
 
 const float leftF = 1;     // Correction factor for left motor
 const float rightF = 0.5;       // Correction factor for right motor
+const float leftFDistance = 0.5;     // Correction factor for left motor
+const float rightFDistance = 1;       // Correction factor for right motor
 bool USStop = false;          // Flag to stop when an obstacle is detected by the ultrasonic sensor
 
 // --- Motor Control Pin Definitions ---
@@ -108,13 +110,13 @@ int mode = 1;
 // plot the delta degrees (multiply by a factor if you need to make it more visable) 
 // and if the steps in degree size corresponds to the steps in measured RPM, then
 // the hypothesis is correct
-const float kpSpeed = 0.007;
-const float kiSpeed = 0;
-const float kdSpeed = 0;
+const float kpSpeed = 0.003; // perfect
+const float kiSpeed = 0.00001;
+const float kdSpeed = 0.00006;
 
-const float kpDistance = 0.01;
+float kpDistance = 0.005;
 const float kiDistance = 0;
-const float kdDistance = 0;//3;
+const float kdDistance = 0;//-0.001;//3;
 
 const float dpr = 166.6666666;
 const float half = 0.5;
@@ -125,3 +127,7 @@ const int RIGHT_ENCODER = 3;
 float travelDistance = 0, leftTravelDistance = 0;
 float rightTravelDistance, distancePerTheta = 0.05667;//15cm/360deg
 float averageTravelDistance =0;
+
+
+const float kiSpeedAc = 0;
+const float kdSpeedAc = 0;

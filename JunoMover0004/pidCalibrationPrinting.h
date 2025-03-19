@@ -23,9 +23,9 @@ void serialPlotter(double voltageVal, double voltageValPrevious, double measured
   Serial.print("Desired:");
   Serial.print(desiredVal);
 
-  // Serial.print(",");
-  // Serial.print("leftE:");
-  // Serial.print(error);
+  Serial.print(",");
+  Serial.print("E:");
+  Serial.print(error);
 
   // Serial.print(",");
   // Serial.print("rightE:");
