@@ -58,7 +58,8 @@ void setup() {
   delay(3000);  // Delay to allow the system to stabilize
   Serial.println("Starting loop");
   //delay(1000);
-  //runBuggy = true;
+  // runBuggy = true;
+  mode = 1;
 }
 
 void loop() {
@@ -81,20 +82,6 @@ void loop() {
   // Speed calculation
   currentLeftRPM = leftDeltaTheta/(dt)*dpr;
   currentRightRPM = rightDeltaTheta/(dt)*dpr;
-  
-  // // This is to increase the responsiveness of the motors
-  // if (leftRPMPrevious > RPMDesired * half){// Running average
-  //   leftRPM = (currentLeftRPM + leftRPMPrevious)*half;
-  // }
-  // else{// No average
-  //   leftRPM = currentLeftRPM;
-  // }
-  // if (rightRPMPrevious > RPMDesired * half){// Running average
-  //   rightRPM = (currentRightRPM + rightRPMPrevious)*half;
-  // }
-  // else{// No average
-  //   rightRPM = currentRightRPM;
-  // }
 
   leftRPM = (currentLeftRPM + leftRPMPrevious)*half;
   rightRPM = (currentRightRPM + rightRPMPrevious)*half;
@@ -122,9 +109,11 @@ void loop() {
   // Stop the motors if the robot is not running or if an obstacle is detected
   // Error
   
-  if (!runBuggy || USStop) {
-    left_motor_move(0, Vmax);
-    right_motor_move(0, Vmax);
+  if (!runBuggy) {
+    // left_motor_move(0, Vmax);
+    // right_motor_move(0, Vmax);
+    RPMDesired = 0;
+    pid();
   } else {
     // Decide movement based on sensor input
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
@@ -137,25 +126,26 @@ void loop() {
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
       // Turn Left
       x+=0.3;
-      if (mode == 2){
-        left_motor_move(0, Vmax);
-        right_motor_move(0, Vmax);
-      }
+      // if (mode == 2){
+      //   left_motor_move(0, Vmax);
+      //   right_motor_move(0, Vmax);
+      // }
       left_motor_move(vInner * leftF, Vmax);
       right_motor_move((vOuter + x) *rightF, Vmax);
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
       // Turn Right
       y+=0.3;
-      if (mode == 2){
-        left_motor_move(0, Vmax);
-        right_motor_move(0, Vmax);
-      }
+      // if (mode == 2){
+      //   left_motor_move(0, Vmax);
+      //   right_motor_move(0, Vmax);
+      // }
       left_motor_move((vOuter + y) * leftF, Vmax);
       right_motor_move(vInner * rightF, Vmax);
     } else {
       // If no sensor condition is met, stop the motors
-      left_motor_move(0, Vmax);
-      right_motor_move(0, Vmax);
+      // left_motor_move(0, Vmax);
+      // right_motor_move(0, Vmax);
+      RPMDesired = 0;
     }
   }
   if (mode == 1){
@@ -165,13 +155,6 @@ void loop() {
     serialPlotter(V, VPrevious, USSensorDistance, USSensorDistance, DistanceDesired, E);
   }
 
-  
-  // Calibrating wheel speed
-  // serialPlotter(leftV, leftVPrevious, leftRPM, leftRPMDesired, leftE);
-  // Speed
-  // Distance
-  //serialPlotter(rightV, rightVPrevious, USSensorDistance, rightDistanceDesired, rightE, leftV, leftVPrevious, USSensorDistance, leftDistanceDesired, leftE);
-  
   // Update time for next loop iteration
   tPrevious = t;
   leftThetaPrevious = leftTheta;

@@ -4,22 +4,6 @@
 #include "motorControl.h"
 
 void pid(){
-  // pidDesiredTCounter += dt;
-  // // Step function that changes the desired RPM of the left motor
-  // if (pidDesiredTCounter>20000){
-  //   pidDesiredTCounter-=20000;
-  //   if (change){
-  //     change = false;
-  //     leftRPMDesired = 150;
-  //   }
-  //   else{
-  //     change = true;
-  //     leftRPMDesired = 0;
-  //   }
-  // }
-  // // We're currently tuning the left wheel so we don't need this
-  // rightVDesired = 0;
-
   if (USSensorDistance < 50 && mode == 2){
     E = USSensorDistance - DistanceDesired;
 
@@ -56,7 +40,7 @@ void pid(){
     Diff = (E - EPrevious) / dt;
 
     // Voltage
-    V = VPrevious + (kpSpeed * E + kiSpeedAc * Inte + kdSpeedAc * Diff);
+    V = VPrevious + (kpSpeed * E + kiSpeed * Inte + kdSpeed * Diff);
   }
 
   // Prevention of antiwinder
