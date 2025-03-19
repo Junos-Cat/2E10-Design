@@ -112,8 +112,8 @@ void loop() {
   if (MessageTimeElapsed > 500){
     MessageTimeElapsed = 0;
     // Send data to the laptop client
-    messageOut = 'T' + "," + String(averageTravelDistance) + "," + String(USSensorDistance) + "," + String(leftRPM) + "," + String(rightRPM) + "," + String((leftRPM + rightRPM)/2) + "," ;
-    //client.println(messageOut);
+    messageOut = String("T") + "," + String(averageTravelDistance) + "," + String(USSensorDistance) + "," + String(leftRPM) + "," + String(rightRPM) + "," + String((leftRPM + rightRPM)/2) + "," ;
+    client.println(messageOut);
   }
   
   // --- Motor Control ---
@@ -124,7 +124,7 @@ void loop() {
   } else {
     // Decide movement based on sensor input
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
-      // Forward
+      //Forward
       // if (mode == 1){
       //   RPMDesired = speedForward;
       // }
@@ -140,13 +140,13 @@ void loop() {
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
       // Turn Left
       x+=0.5;
-      left_motor_move(vInner, Vmax);
-      right_motor_move(vOuter + x, Vmax);
+      left_motor_move(vInner * leftF, Vmax);
+      right_motor_move((vOuter + x) *rightF, Vmax);
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
       // Turn Right
       y+=0.5;
-      left_motor_move(vOuter + y, Vmax);
-      right_motor_move(vInner, Vmax);
+      left_motor_move((vOuter + y) * leftF, Vmax);
+      right_motor_move(vInner * rightF, Vmax);
     } else {
       // If no sensor condition is met, stop the motors
       RPMDesired = speedStop;

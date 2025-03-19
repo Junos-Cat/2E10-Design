@@ -30,9 +30,9 @@ const int speedOuter = 90;
 const int speedInner = 0;
 const int speedStop = 0;
 
-const int vForward = 4.8; //min: 3.9 niceish: 4.3 max: 4.8
-const int vOuter = 4.8;
-const int vInner = 0;
+const int vForward = 2.8; //min: 2.7 niceish: 2.8 max: 3
+const int vOuter = 2.8;
+const int vInner = 1;
 
 // Unloaded
 const int distanceForward = 15;
@@ -41,7 +41,7 @@ const int distanceInner = 14;
 const int distanceStop = 0;
 
 const float leftF = 1;     // Correction factor for left motor
-const float rightF = 1;       // Correction factor for right motor
+const float rightF = 0.5;       // Correction factor for right motor
 bool USStop = false;          // Flag to stop when an obstacle is detected by the ultrasonic sensor
 
 // --- Motor Control Pin Definitions ---

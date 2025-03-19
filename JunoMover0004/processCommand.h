@@ -20,7 +20,7 @@ void processCommand(WiFiClient &client) {
   //Serial.println("Taking command");
   while (client.available()) {
     char c = client.read();
-    // Serial.print(c);
+    Serial.print(c);
     dataIn += c;
     if (dataIn[dataIn.length()-1] == 'X'){
       // wipe data
@@ -41,7 +41,7 @@ void processCommand(WiFiClient &client) {
         DistanceString += dataIn[3];
         DistanceString += dataIn[4];
         DistanceDesired = DistanceString.toInt();
-        // Serial.println(DistanceString);
+        Serial.println(DistanceString);
         DistanceString = "";
       }
       else if (dataIn[1] == 'V'){
@@ -49,7 +49,7 @@ void processCommand(WiFiClient &client) {
         RPMString += dataIn[6];
         RPMString += dataIn[7];
         RPMDesired = RPMString.toInt();
-        // Serial.println(RPMString);
+        Serial.println(RPMString);
         RPMString = "";
       }
       
