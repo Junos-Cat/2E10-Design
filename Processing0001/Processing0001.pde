@@ -20,11 +20,21 @@ float currentSpeed = 50; // Initial speed (50 cm/s)
 float leftWheelSpeed = 30; // Random initial value
 float rightWheelSpeed = 70; // Random initial value
 
-
+// sensors
 int Sensor_x_baseline = 150;
 int Sensor_y_baseline = 150;
 int Sensor_y_spacing = 80;
 
+// inputs
+int Input_x_baseline = 750;
+int Input_y_baseline = 180;
+int Input_y_spacing = 120;
+
+// speedometer
+float x = 750;
+float y = 550;
+float smallY = y + 170;
+  
 Client myClient;
 String data;
 String buggyIP = "192.168.4.1";
@@ -96,15 +106,13 @@ void draw() {
 
 void drawSpeedometer() {
   // Draw the average speed speedometer
-  float x = width / 2;
-  float y = height / 3;
 
   // Call the function to draw the large speedometer
   drawLargeSpeedometer(x, y, radius, avgSpeed);
 
   // Draw the smaller speedometers below
   float smallRadius = 45; // Smaller radius for the two smaller speedometers
-  float smallY = height / 1.5;
+
 
   // Left Speedometer
   drawSmallSpeedometer(x - 150, smallY, smallRadius, speedLeft);
@@ -243,18 +251,18 @@ void drawSmallSpeedometer(float x, float y, float radius, float currentSpeed) {
 
 void drawDesiredDistanceBox() {
   fill(boxColor);
-  rect(700, 240, 300, 70);
+  rect(Input_x_baseline, Input_y_baseline + 10, 300, 70);
   fill(#ecf0f1);
   textSize(16);
-  text("Desired Distance", 710, 230);
+  text("Desired Distance", Input_x_baseline + 60, Input_y_baseline);
 }
 
 void drawDesiredSpeedBox() {
   fill(boxColor);
-  rect(700, 360, 300, 70);
+  rect(Input_x_baseline, Input_y_baseline + Input_y_spacing + 10, 300, 70);
   fill(#ecf0f1);
   textSize(16);
-  text("Desired Speed", 710, 350);
+  text("Desired Speed", Input_x_baseline + 60, Input_y_baseline + Input_y_spacing);
 }
 
 void drawHeader() {
@@ -324,15 +332,15 @@ void createDashboardElements() {
 void createNewElements() {
   // Desired Distance UI Elements
   cp5.addToggle("DistanceMode")
-     .setPosition(710, 255)
+     .setPosition(Input_x_baseline + 10, Input_y_baseline + 25)
      .setSize(40, 40)
      .setValue(false)
      .setColorBackground(dangerColor)
      .setLabel("") // Remove label text
      .setFont(createFont("Arial", 16));
      
-  cp5.addTextfield("desiredDistanceInput")
-     .setPosition(760, 255)
+  cp5.addTextfield("  ")
+     .setPosition(Input_x_baseline + 50 + 10, Input_y_baseline + 25)
      .setSize(130, 40)
      .setColorValue(#2c3e50)
      .setColorBackground(#ecf0f1)
@@ -340,7 +348,7 @@ void createNewElements() {
      .setFont(createFont("Arial", 16));
      
   cp5.addButton("setDesiredDistance")
-     .setPosition(900, 255)
+     .setPosition(Input_x_baseline + 190 + 10, Input_y_baseline + 25)
      .setSize(90, 40)
      .setLabel("Set")
      .setColorBackground(secondaryColor)
@@ -351,15 +359,15 @@ void createNewElements() {
      
   // Desired Speed UI Elements
   cp5.addToggle("SpeedMode")
-     .setPosition(710, 375)
+     .setPosition(Input_x_baseline + 10, Input_y_baseline + Input_y_spacing + 25)
      .setSize(40, 40)
      .setValue(false)
      .setColorBackground(dangerColor)
      .setLabel("") // Remove label text
      .setFont(createFont("Arial", 16));
      
-  cp5.addTextfield("desiredSpeedInput")
-     .setPosition(760, 375)
+  cp5.addTextfield("")
+     .setPosition(Input_x_baseline + 50 + 10, Input_y_baseline + Input_y_spacing + 25)
      .setSize(130, 40)
      .setColorValue(#2c3e50)
      .setColorBackground(#ecf0f1)
@@ -367,7 +375,7 @@ void createNewElements() {
      .setFont(createFont("Arial", 16));
      
   cp5.addButton("setDesiredSpeed")
-     .setPosition(900, 375)
+     .setPosition(Input_x_baseline + 190 + 10, Input_y_baseline + Input_y_spacing + 25)
      .setSize(90, 40)
      .setLabel("Set")
      .setColorBackground(secondaryColor)
@@ -375,7 +383,7 @@ void createNewElements() {
      .setFont(createFont("Arial", 16));
 }
 
-//??????????????????????????????????????????????????  More buttons  ????????????????????????????????????????????
+//??????????????????????????????????????????????????  Mode buttons  ????????????????????????????????????????????
  
 void controlEvent(ControlEvent e) {
   if (e.isFrom("DistanceMode")) {
