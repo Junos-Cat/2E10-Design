@@ -12,6 +12,15 @@ String desiredSpeedString1;
 String desiredSpeedString2;
 
 
+float radius = 100; // Radius for the speedometer
+float arcAngle = 240; // The arc of the speedometer (240 degrees)
+float minSpeed = 0; // Minimum speed (0)
+float maxSpeed = 100; // Maximum speed (*TO BE CHANGED)
+float currentSpeed = 50; // Initial speed (50 cm/s)
+float leftWheelSpeed = 30; // Random initial value
+float rightWheelSpeed = 70; // Random initial value
+
+
 int Sensor_x_baseline = 500;
 int Sensor_y_baseline = 500;
 int Sensor_y_spacing = 80;
@@ -71,6 +80,7 @@ void draw() {
   // Desired Distance and Desired Speed sections remain (with increased vertical Sensor_y_spacing)
   drawDesiredDistanceBox();
   drawDesiredSpeedBox();
+  drawSpeedometer();
   
   // System Log heading
   fill(#ecf0f1);
@@ -82,6 +92,36 @@ void draw() {
   displayConnectionStatus();
 }
 
+//%%%%%%%%%%%%%         Speedomeeter          %%%%%%%%%%%%%%%%%%%
+
+void drawSpeedometer() {
+  // Draw the average speed speedometer
+  float x = width / 2;
+  float y = height / 3;
+
+  // Call the function to draw the large speedometer
+  drawLargeSpeedometer(x, y, radius, avgSpeed);
+
+  // Draw the smaller speedometers below
+  float smallRadius = 45; // Smaller radius for the two smaller speedometers
+  float smallY = height / 1.5;
+
+  // Left Speedometer
+  drawSmallSpeedometer(x - 150, smallY, smallRadius, speedLeft);
+
+  // Right Speedometer
+  drawSmallSpeedometer(x + 150, smallY, smallRadius, speedRight);
+
+  // Draw titles below each small speedometer
+  textSize(12);
+  textAlign(CENTER, CENTER);
+  text("Left Wheel", x - 150, smallY + 55); // Title for Left Wheel Speedometer
+  text("Right Wheel", x + 150, smallY + 55); // Title for Right Wheel Speedometer
+
+  // Title for Average Speed
+  textSize(14);
+  text("Avg Speed", x, y + radius + 5);
+}
 
 //******************************************     sensor boxes       ****************************
 void drawUSDistanceSection() {
@@ -124,6 +164,79 @@ void drawDistanceTravelledSection() {
   fill(#ecf0f1);
   textSize(20);
   text(nf(objectDist, 1, 2) + " cm", Sensor_x_baseline, Sensor_y_baseline + 30 + Sensor_y_spacing);
+}
+
+
+void drawLargeSpeedometer(float x, float y, float radius, float currentSpeed) {
+  // Draw the arc of the speedometer
+  stroke(0);
+  strokeWeight(2);
+  noFill();
+  pushMatrix();
+  translate(x, y);
+  rotate(PI); // Speedometer keeps printing upside down, needs to be rotated
+
+  // Start 30 degrees below horizontal to the left
+  arc(0, 0, radius * 2, radius * 2, -radians(30), -radians(30) + radians(arcAngle));
+
+  // Draw baseline joining end of the arc
+  float arcStartX = cos(-radians(30)) * radius;  // Left end of arc
+  float arcStartY = sin(-radians(30)) * radius;
+  float arcEndX = cos(-radians(30) + radians(arcAngle)) * radius;  // Right end of arc
+  float arcEndY = sin(-radians(30) + radians(arcAngle)) * radius;
+
+  line(arcStartX, arcStartY, arcEndX, arcEndY); // Horizontal base
+
+  // Draw the arc bar representing current speed
+  float angle = map(currentSpeed, minSpeed, maxSpeed, -radians(30), -radians(30) + radians(arcAngle));
+  stroke(0, 0, 255); // Blue for now
+  strokeWeight(10);
+  noFill();
+  arc(0, 0, radius * 2, radius * 2, -radians(30), angle);
+
+  popMatrix();
+
+  // Labels and values for main speedometer
+  fill(0);
+  textAlign(CENTER, CENTER);
+  textSize(16);
+  text(currentSpeed + " cm/s", x, y); // Add speed to centre
+}
+
+void drawSmallSpeedometer(float x, float y, float radius, float currentSpeed) {
+  // Draw the arc of the smaller speedometer
+  stroke(0);
+  strokeWeight(2);
+  noFill();
+  pushMatrix();
+  translate(x, y);
+  rotate(PI); // Same issue with smaller speedometers, need to be rotated
+
+  arc(0, 0, radius * 2, radius * 2, -radians(30), -radians(30) + radians(arcAngle));
+
+  float arcStartX = cos(-radians(30)) * radius;  // Left end of arc
+  float arcStartY = sin(-radians(30)) * radius;
+  float arcEndX = cos(-radians(30) + radians(arcAngle)) * radius;  // Right end of arc
+  float arcEndY = sin(-radians(30) + radians(arcAngle)) * radius;
+
+  line(arcStartX, arcStartY, arcEndX, arcEndY); // Horizontal base
+
+  // Draw the arc bar for the current speed
+  float angle = map(currentSpeed, minSpeed, maxSpeed, -radians(30), -radians(30) + radians(arcAngle));
+  stroke(0, 0, 255);
+  strokeWeight(5);
+  noFill();
+  arc(0, 0, radius * 2, radius * 2, -radians(30), angle);
+
+  pushMatrix();
+  rotate(PI);
+  fill(0);
+  textAlign(CENTER, CENTER);
+  textSize(14);
+  text(currentSpeed + " cm/s", 0, 0);
+  popMatrix();
+
+  popMatrix();
 }
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<,     draw input boxes        >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
@@ -301,22 +414,26 @@ void controlEvent(ControlEvent e) {
 void updateSensorData() {
   if (myClient.available() > 0) {
     data = myClient.readString();
-    //println(data);
+    println(data);
     if (data != null) {
       String[] splitData = split(data, ',');
-      if (splitData.length >= 7) {
+      if (splitData.length >= 6) {
+        println(splitData[0]);
+        print("sub");
+        print(data.substring(0,1));
+        println("end");
         try {
-          if (splitData[0] == "T"){///////////////////////////////IDK IF THIS IS WHERE IM GOING WRONG
-            println(data);
+          if (data.substring(0,1) == "T"){///////////////////////////////IDK IF THIS IS WHERE IM GOING WRONG
+            println(splitData);
           travelDist   = float(splitData[1]);
           objectDist   = float(splitData[2]);
           speedLeft    = float(splitData[3]);
           speedRight   = float(splitData[4]);
           avgSpeed     = float(splitData[5]);
           //voltageRight = float(splitData[6]);
-          String buggyMsg = splitData[6];
-          logArea.append("Buggy Message: " + buggyMsg + "\n");
-          logArea.scroll(1);
+          //String buggyMsg = splitData[6];
+          //logArea.append("Buggy Message: " + buggyMsg + "\n");
+          //logArea.scroll(1);
           }
         } catch (NumberFormatException e) {
           println("Error reading sensor data: " + e.getMessage());
