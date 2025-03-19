@@ -15,14 +15,14 @@ String desiredSpeedString2;
 float radius = 100; // Radius for the speedometer
 float arcAngle = 240; // The arc of the speedometer (240 degrees)
 float minSpeed = 0; // Minimum speed (0)
-float maxSpeed = 100; // Maximum speed (*TO BE CHANGED)
+float maxSpeed = 200; // Maximum speed (*TO BE CHANGED)
 float currentSpeed = 50; // Initial speed (50 cm/s)
 float leftWheelSpeed = 30; // Random initial value
 float rightWheelSpeed = 70; // Random initial value
 
 
-int Sensor_x_baseline = 500;
-int Sensor_y_baseline = 500;
+int Sensor_x_baseline = 150;
+int Sensor_y_baseline = 150;
 int Sensor_y_spacing = 80;
 
 Client myClient;
@@ -127,7 +127,7 @@ void drawSpeedometer() {
 void drawUSDistanceSection() {
   // Draw background box for US sensor distance, shifted right by 50 px
   fill(boxColor);
-  rect(Sensor_x_baseline - 10, Sensor_y_baseline, 200, 40);
+  rect(Sensor_x_baseline - 70, Sensor_y_baseline + 10, 200, 40);
   fill(#ecf0f1);
   textSize(16);
   text("US Sensor Distance", Sensor_x_baseline, Sensor_y_baseline - 10);
@@ -147,7 +147,7 @@ void drawUSDistanceSection() {
 void drawDistanceTravelledSection() {
   // Draw background box for US sensor distance, shifted right by 50 px
   fill(boxColor);
-  rect(Sensor_x_baseline - 10, Sensor_y_baseline + Sensor_y_spacing, 200, 40);
+  rect(Sensor_x_baseline - 70, Sensor_y_baseline + Sensor_y_spacing + 10, 200, 40);
   fill(#ecf0f1);
   textSize(16);
   text("Distance Travelled", Sensor_x_baseline, Sensor_y_baseline - 10 + Sensor_y_spacing);
