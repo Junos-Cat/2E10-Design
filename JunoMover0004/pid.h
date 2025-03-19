@@ -20,23 +20,43 @@ void pid(){
   // // We're currently tuning the left wheel so we don't need this
   // rightVDesired = 0;
 
-  
+  if (USSensorDistance < 50 && mode == 2){
+    E = USSensorDistance - DistanceDesired;
 
-  // Integration
-  Inte = IntePrevious + (dt * (E + EPrevious) * half);
-
-  // Differenciation
-  Diff = (E - EPrevious) / dt;
-
-  // Voltage
-  if (mode == 1){
-    V = VPrevious + (kpSpeed * E + kiSpeedAc * Inte + kdSpeedAc * Diff);
-  }
-  else if (mode == 2){
-    V = VPrevious + (kpDistance * E + kiDistance * Inte + kdDistance * Diff);
-    if (V>4.5){
-      V = 4.5;
+    if (E > 0){
+      kpDistance = 0.1;
     }
+    else{
+      kpDistance = 5;
+    }
+    if (E > 40){
+      E = 40;
+    }
+
+    // Integration
+    Inte = IntePrevious + (dt * (E + EPrevious) * half);
+
+    // Differenciation
+    Diff = (E - EPrevious) / dt;
+
+    // Voltage
+    V = VPrevious + (kpDistance * E + kiDistance * Inte + kdDistance * Diff);
+    // if (V>4.5){
+    //   V = 4.5;
+    // }
+  }
+  else {
+    // Error for speed
+    E = RPMDesired - (leftRPM + rightRPM)/2;
+
+    // Integration
+    Inte = IntePrevious + (dt * (E + EPrevious) * half);
+
+    // Differenciation
+    Diff = (E - EPrevious) / dt;
+
+    // Voltage
+    V = VPrevious + (kpSpeed * E + kiSpeedAc * Inte + kdSpeedAc * Diff);
   }
 
   // Prevention of antiwinder
@@ -52,12 +72,6 @@ void pid(){
   // Update voltages
   VPrevious = V;
 
-  if (mode == 1){
-  left_motor_move(V, Vmax);
-  right_motor_move(V, Vmax);
-  }
-  else if (mode == 2){
-    left_motor_move(V * leftFDistance, Vmax);
-    right_motor_move(V * rightFDistance, Vmax);
-  }
+  left_motor_move(V * leftF, Vmax);
+  right_motor_move(V * rightF, Vmax);
 }

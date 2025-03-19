@@ -110,7 +110,7 @@ void loop() {
     detectUSSensorObject();
   }
   // detectUSSensorObject();
-  
+
   if (MessageTimeElapsed > 500){
     MessageTimeElapsed = 0;
     // Send data to the laptop client
@@ -121,38 +121,13 @@ void loop() {
   // --- Motor Control ---
   // Stop the motors if the robot is not running or if an obstacle is detected
   // Error
-  if (mode == 1){
-    E = RPMDesired - (leftRPM + rightRPM)/2;
-  }
-  else if (mode == 2){
-    
-    E = USSensorDistance - DistanceDesired;
-    // if (USSensorDistance > 90){
-    //   E = RPMDesired - (leftRPM + rightRPM)/2;
-    // }
-    if (E > 0){
-      kpDistance = 0.1;
-    }
-    else{
-      kpDistance = 5;
-    }
-    if (E > 40){
-      E = 40;
-    }
-  }
+  
   if (!runBuggy || USStop) {
     left_motor_move(0, Vmax);
     right_motor_move(0, Vmax);
   } else {
     // Decide movement based on sensor input
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
-      //Forward
-      // if (mode == 1){
-      //   // RPMDesired = speedForward;
-      // }
-      // else if (mode == 2){
-      //   // DistanceDesired = distanceForward;
-      // }
       pid();
       // left_motor_move(vForward, Vmax);
       // right_motor_move(vForward, Vmax);

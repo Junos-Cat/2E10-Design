@@ -95,7 +95,7 @@ float rightRPM;
 float rightRPMPrevious = 0;
 float currentRightRPM;
 
-float RPMDesired = 0;
+float RPMDesired = 35;
 float DistanceDesired = 15;
 
 float pidDesiredTCounter = 0;
