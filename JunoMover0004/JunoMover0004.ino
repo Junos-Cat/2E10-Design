@@ -59,7 +59,7 @@ void setup() {
   Serial.println("Starting loop");
   //delay(1000);
   // runBuggy = true;
-  mode = 1;
+  UIMode = 1;
 }
 
 void loop() {
@@ -122,11 +122,15 @@ void loop() {
       // right_motor_move(vForward, Vmax);
       x=0;
       y=0;
+      if (huskyTurning){ // If we have already taken the turn, then reset the huskyMode
+        huskyTurning = false; // Say we're past the turn/have executed the QR code's command
+        huskyMode == "Stop"; // Because we've completed the command and don't have any others, stop next time we see a junction
+      }
 
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
       // Turn Left
       x+=0.3;
-      // if (mode == 2){
+      // if (UIMode == 2){
       //   left_motor_move(0, Vmax);
       //   right_motor_move(0, Vmax);
       // }
@@ -135,23 +139,39 @@ void loop() {
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
       // Turn Right
       y+=0.3;
-      // if (mode == 2){
+      // if (UIMode == 2){
       //   left_motor_move(0, Vmax);
       //   right_motor_move(0, Vmax);
       // }
       left_motor_move((vOuter + y) * leftF, Vmax);
       right_motor_move(vInner * rightF, Vmax);
-    } else {
-      // If no sensor condition is met, stop the motors
-      // left_motor_move(0, Vmax);
-      // right_motor_move(0, Vmax);
-      RPMDesired = 0;
+    } else { // Both IR sensors read white
+      huskyTurning = true;
+      if (huskyMode == "Stop"){ // Stop buggy
+        left_motor_move(0, Vmax);
+        right_motor_move(0, Vmas);
+      }
+      if (huskyMode == "Forward"){ // We're in the go forward mode
+        pid();
+        x=0;
+        y=0;
+      }
+      else if(){ // We're in the turn left mode
+        x+=0.3;
+        left_motor_move(vInner * leftF, Vmax);
+        right_motor_move((vOuter + x) *rightF, Vmax);
+      }
+      else if(){ // We're in the turn right mode
+        left_motor_move((vOuter + y) * leftF, Vmax);
+        right_motor_move(vInner * rightF, Vmax);
+        y+=0.3;
+      }
     }
   }
-  if (mode == 1){
+  if (UIMode == 1){
     serialPlotter(V, VPrevious, leftRPM, rightRPM, RPMDesired, E);
   }
-  else if (mode == 2){
+  else if (UIMode == 2){
     serialPlotter(V, VPrevious, USSensorDistance, USSensorDistance, DistanceDesired, E);
   }
 

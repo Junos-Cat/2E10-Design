@@ -37,7 +37,7 @@ void processCommand(WiFiClient &client) {
       }
       // disect data
       if (dataIn[1] == 'D'){
-        mode = 2;
+        UIMode = 2;
         DistanceString += dataIn[2];
         DistanceString += dataIn[3];
         DistanceString += dataIn[4];
@@ -47,7 +47,7 @@ void processCommand(WiFiClient &client) {
         DistanceString = "";
       }
       else if (dataIn[1] == 'V'){
-        mode = 1;
+        UIMode = 1;
         RPMString += dataIn[5];
         RPMString += dataIn[6];
         RPMString += dataIn[7];

@@ -100,7 +100,7 @@ bool change = true;
 
 const float damper = 0;
 
-int mode = 1;
+int UIMode = 1;
 
 ///////////////////////////https://www.youtube.com/watch?v=uXnDwojRb1g
 // To check if the steps really are present due to the steps in encoder values,
