@@ -5,6 +5,11 @@
 #include "variables.h"
 #include "encoderInterrupt.h"
 #include "pidCalibrationPrinting.h"
+#include "HUSKYLENS.h"
+HUSKYLENS huskylens;
+#include "Myhuskylens.h"
+
+
 
 void setup() {
   delay(1000);
@@ -54,6 +59,8 @@ void setup() {
   // Set up interupting function
   attachInterrupt( digitalPinToInterrupt(LEFT_ENCODER), left_encoder_interrupt, CHANGE);
   attachInterrupt( digitalPinToInterrupt(RIGHT_ENCODER), right_encoder_interrupt, CHANGE);
+
+  myHuskySetup();
 
   delay(3000);  // Delay to allow the system to stabilize
   Serial.println("Starting loop");
@@ -105,10 +112,8 @@ void loop() {
     client.println(messageOut);
   }
   
-  // --- Motor Control ---
-  // Stop the motors if the robot is not running or if an obstacle is detected
-  // Error
-  
+  huskyFunction();
+
   if (!runBuggy) {
     // left_motor_move(0, Vmax);
     // right_motor_move(0, Vmax);
@@ -118,50 +123,40 @@ void loop() {
     // Decide movement based on sensor input
     if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == HIGH) {
       pid();
-      // left_motor_move(vForward, Vmax);
-      // right_motor_move(vForward, Vmax);
+      // Forward
       x=0;
       y=0;
       if (huskyTurning){ // If we have already taken the turn, then reset the huskyMode
         huskyTurning = false; // Say we're past the turn/have executed the QR code's command
         huskyMode == "Stop"; // Because we've completed the command and don't have any others, stop next time we see a junction
       }
-
     } else if (digitalRead(LEFT_IR) == LOW && digitalRead(RIGHT_IR) == HIGH) {
       // Turn Left
       x+=0.3;
-      // if (UIMode == 2){
-      //   left_motor_move(0, Vmax);
-      //   right_motor_move(0, Vmax);
-      // }
       left_motor_move(vInner * leftF, Vmax);
       right_motor_move((vOuter + x) *rightF, Vmax);
     } else if (digitalRead(LEFT_IR) == HIGH && digitalRead(RIGHT_IR) == LOW) {
       // Turn Right
       y+=0.3;
-      // if (UIMode == 2){
-      //   left_motor_move(0, Vmax);
-      //   right_motor_move(0, Vmax);
-      // }
       left_motor_move((vOuter + y) * leftF, Vmax);
       right_motor_move(vInner * rightF, Vmax);
     } else { // Both IR sensors read white
       huskyTurning = true;
       if (huskyMode == "Stop"){ // Stop buggy
         left_motor_move(0, Vmax);
-        right_motor_move(0, Vmas);
+        right_motor_move(0, Vmax);
       }
       if (huskyMode == "Forward"){ // We're in the go forward mode
         pid();
         x=0;
         y=0;
       }
-      else if(){ // We're in the turn left mode
+      else if (huskyMode == "Left"){ // We're in the turn left mode
         x+=0.3;
         left_motor_move(vInner * leftF, Vmax);
         right_motor_move((vOuter + x) *rightF, Vmax);
       }
-      else if(){ // We're in the turn right mode
+      else if (huskyMode == "Right"){ // We're in the turn right mode
         left_motor_move((vOuter + y) * leftF, Vmax);
         right_motor_move(vInner * rightF, Vmax);
         y+=0.3;

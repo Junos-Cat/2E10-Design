@@ -93,6 +93,7 @@ float rightRPMPrevious = 0;
 float currentRightRPM;
 
 float RPMDesired = 35;
+float maxRPM = 45;
 float DistanceDesired = 15;
 
 float pidDesiredTCounter = 0;
@@ -124,3 +125,7 @@ const int RIGHT_ENCODER = 3;
 float travelDistance = 0, leftTravelDistance = 0;
 float rightTravelDistance, distancePerTheta = 0.05667;//15cm/360deg
 float averageTravelDistance =0;
+
+// Huskylens variables
+String huskyMode = "Forward";
+bool huskyTurning = false;
