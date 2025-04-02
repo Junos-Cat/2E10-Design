@@ -1,5 +1,7 @@
 #pragma once
 #include <Arduino.h>
+#include "HUSKYLENS.h"
+#include "SoftwareSerial.h"
 
 // --- WiFi Settings ---
 const char* ssid = "Cheeky";             // Your WiFi network name
@@ -127,5 +129,8 @@ float rightTravelDistance, distancePerTheta = 0.05667;//15cm/360deg
 float averageTravelDistance =0;
 
 // Huskylens variables
+HUSKYLENS huskylens;
 String huskyMode = "Forward";
 bool huskyTurning = false;
+const int speedLimit1 = 25;
+int CenterXPos, CenterYPos, BlockWidth, BlockHeight, ID;

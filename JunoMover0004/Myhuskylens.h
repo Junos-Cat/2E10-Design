@@ -1,9 +1,7 @@
 #pragma once
 #include <Arduino.h>
 #include "variables.h"
-//#include "HUSKYLENS.h"
-// #include "Wire.h"
-// #include "HuskyLensProtocolCore.h"
+#include "HUSKYLENS.h"
 #include "SoftwareSerial.h"
 
 void myHuskySetup(){
@@ -13,42 +11,12 @@ void myHuskySetup(){
     Serial.println("Oh no! Check HuskyLens connection");
     delay(1000);
   }
+  if( huskylens.begin(Wire) ){
+  Serial.println("HuskyLens connected");
+  }
 }
 
-String returnHuskyMode(HUSKYLENS huskylens){
-  CenterXPos = result.xCenter;
-  CenterYPos = result.yCenter;
-  BlockWdith = result.width;
-  BlockHeight = result.height;
-  ID = result.ID;
-  Serial.println(CenterXPos);
-  Serial.println(CenterYPos);
-  Serial.println(BlockWdith);
-  Serial.println(BlockHeight);
-  Serial.println(ID);
-
-  return huskyMode;
-  
-  // if (BlockWidth > ){ // Only change our mode if the code is close enough
-  //   if (ID == ){ // Turn right ahead
-  //     return "Right";
-  //   }
-  //   else if (ID == ){ // Turn left at next 
-  //     return "Left";
-  //   }
-  //   else if (ID == ){ // Go max speed
-  //     RPMDesired = maxRPM;
-  //     return "Forward";
-  //   }
-  //   else if (ID == ){ // The speed limit is 
-
-  //   }
-  // }
-  // else{ // Return the previous huskyMode i.e. don't change huskyMode
-  //   return huskyMode;
-  // }
-}
-
+String returnHuskyMode(HUSKYLENSResult result);
 
 void huskyFunction(){
   if( huskylens.request() ) {
@@ -73,7 +41,40 @@ void huskyFunction(){
   }
 }
 
+String returnHuskyMode(HUSKYLENSResult result){
+  CenterXPos = result.xCenter;
+  CenterYPos = result.yCenter;
+  BlockWidth = result.width;
+  BlockHeight = result.height;
+  ID = result.ID;
+  Serial.println(result.xCenter);
+  Serial.println(result.yCenter);
+  Serial.println(result.width);
+  Serial.println(result.height);
+  Serial.println(result.ID);
 
+  return huskyMode;
+  
+  if (BlockWidth >30 ){ // Only change our mode if the code is close enough
+    if (ID == 1){ // Turn right ahead
+      return "Right";
+    }
+    else if (ID == 2){ // Turn left at next 
+      return "Left";
+    }
+    else if (ID == 3){ // Go max speed
+      RPMDesired = maxRPM;
+      return "Forward";
+    }
+    else if (ID == 4){ // The speed limit is 
+      RPMDesired = speedLimit1;
+      return "Forward";
+    }
+  }
+  else{ // Return the previous huskyMode i.e. don't change huskyMode
+    return huskyMode;
+  }
+}
 
 
 

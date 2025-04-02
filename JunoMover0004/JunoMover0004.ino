@@ -6,7 +6,7 @@
 #include "encoderInterrupt.h"
 #include "pidCalibrationPrinting.h"
 #include "HUSKYLENS.h"
-HUSKYLENS huskylens;
+#include "SoftwareSerial.h"
 #include "Myhuskylens.h"
 
 
