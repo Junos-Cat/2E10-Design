@@ -27,7 +27,7 @@ void setup() {
   Serial.print("Arduino IP: ");
   Serial.println(WiFi.localIP());
 
-  // Start the HTTP server
+  // Start the server
   server.begin();
 
   // --- Set Pin Modes ---
@@ -93,7 +93,7 @@ void loop() {
   leftRPM = (currentLeftRPM + leftRPMPrevious)*half;
   rightRPM = (currentRightRPM + rightRPMPrevious)*half;
 
-  // Check incoming HTTP request
+  // Check for incoming commands
   WiFiClient client = server.available();
   processCommand(client);
 
