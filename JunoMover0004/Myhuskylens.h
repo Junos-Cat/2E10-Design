@@ -7,12 +7,12 @@
 void myHuskySetup(){
   Serial.begin(9600);
   Wire.begin();
-    while( !huskylens.begin(Wire) ){
+  while( !huskylens.begin(Wire) ){
     Serial.println("Oh no! Check HuskyLens connection");
     delay(1000);
   }
   if( huskylens.begin(Wire) ){
-  Serial.println("HuskyLens connected");
+    Serial.println("HuskyLens connected");
   }
 }
 
@@ -52,8 +52,6 @@ String returnHuskyMode(HUSKYLENSResult result){
   Serial.println(result.width);
   Serial.println(result.height);
   Serial.println(result.ID);
-
-  return huskyMode;
   
   if (BlockWidth >30 ){ // Only change our mode if the code is close enough
     if (ID == 1){ // Turn right ahead
