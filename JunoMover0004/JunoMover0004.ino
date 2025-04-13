@@ -118,6 +118,7 @@ void loop() {
     // left_motor_move(0, Vmax);
     // right_motor_move(0, Vmax);
     RPMDesired = 0;
+    DistanceDesired = 0;
     pid();
   } else {
     // Decide movement based on sensor input
@@ -146,7 +147,7 @@ void loop() {
         left_motor_move(0, Vmax);
         right_motor_move(0, Vmax);
       }
-      if (huskyMode == "Forward"){ // We're in the go forward mode
+      else if (huskyMode == "Forward"){ // We're in the go forward mode
         pid();
         x=0;
         y=0;
