@@ -56,6 +56,15 @@ float USTimeElapsed = 0, MessageTimeElapsed = 0;        // Accumulates elapsed t
 float t, tPrevious=0, dt;
 float USSensorDuration, USSensorDistance, USSensorDistancePrevious = 0;     // Duration of ultrasonic pulse and calculated distance
 
+unsigned long tagDetectedTime = 0;      
+const unsigned long tagDelay = 500;       
+float tagDistance = 999;                  
+const float distanceThreshold = 50.0;     
+extern unsigned long tagDetectedTime;
+float tagDetectionTravelDistance = 0;  
+// Global variable for keeping the active April tag command until the next tag is detected
+String activeTagCommand = "";
+
 // --- Commands to and from the laptop ---
 String messageOut;
 String dataIn;
