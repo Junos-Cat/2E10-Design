@@ -84,7 +84,7 @@ String returnHuskyMode(HUSKYLENSResult result) {
          tagDetectionTravelDistance = 0;
          return activeTagCommand;
       } else {
-         // Until 20 cm is traversed, return the already active command if available,
+         // Until 15 cm is traversed, return the already active command if available,
          // otherwise, return the current mode.
          return (activeTagCommand != "") ? activeTagCommand : huskyMode;
       }
@@ -94,7 +94,7 @@ String returnHuskyMode(HUSKYLENSResult result) {
         tagDetectedTime = millis();
         tagDetectionTravelDistance = averageTravelDistance;
       }
-      if ((averageTravelDistance - tagDetectionTravelDistance) >= 20) {
+      if ((averageTravelDistance - tagDetectionTravelDistance) >= 15) {
          RPMDesired = speedLimit1;
          activeTagCommand = "Forward";
          tagDetectedTime = 0;
