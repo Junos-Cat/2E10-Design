@@ -4,32 +4,37 @@
 #include "motorControl.h"
 
 void pid(){
-  // Error for speed
-  E = RPMDesired - (leftRPM + rightRPM)/2;
+  if (UIMode == 1){ // Speed control
+    // Error for speed
+    E = RPMDesired - (leftRPM + rightRPM)/2;
 
-  // Integration
-  Inte = IntePrevious + (dt * (E + EPrevious) * half);
+    // Integration
+    Inte = IntePrevious + (dt * (E + EPrevious) * half);
 
-  // Differenciation
-  Diff = (E - EPrevious) / dt;
+    // Differenciation
+    Diff = (E - EPrevious) / dt;
 
-  // Voltage
-  V = VPrevious + (kpSpeed * E + kiSpeed * Inte + kdSpeed * Diff);
+    // Voltage
+    V = VPrevious + (kpSpeed * E + kiSpeed * Inte + kdSpeed * Diff);
 
 
-  // Prevention of antiwinder
-  if (V > Vmax) {
-    V = Vmax;
-    Inte = IntePrevious;
+    // Prevention of antiwinder
+    if (V > Vmax) {
+      V = Vmax;
+      Inte = IntePrevious;
+    }
+    if (V < Vmin) {
+      V = Vmin;
+      Inte = IntePrevious;
+    }
+
+    // Update voltages
+    VPrevious = V;
+
+    left_motor_move(V * leftF, Vmax);
+    right_motor_move(V * rightF, Vmax);
   }
-  if (V < Vmin) {
-    V = Vmin;
-    Inte = IntePrevious;
+  else if (UIMode == 2){ // Distance control
   }
-
-  // Update voltages
-  VPrevious = V;
-
-  left_motor_move(V * leftF, Vmax);
-  right_motor_move(V * rightF, Vmax);
+  
 }
