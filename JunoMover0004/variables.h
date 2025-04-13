@@ -111,8 +111,8 @@ int UIMode = 1;
 // and if the steps in degree size corresponds to the steps in measured RPM, then
 // the hypothesis is correct
 const float kpSpeed = 0.003; // perfect
-const float kiSpeed = 0;
-const float kdSpeed = 0;
+const float kiSpeed = 0.0012;
+const float kdSpeed = 0.0001;
 
 float kpDistance;
 const float kiDistance = 0;
